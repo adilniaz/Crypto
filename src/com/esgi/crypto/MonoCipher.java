@@ -71,55 +71,75 @@ public class MonoCipher implements ICipher {
 	}
 
 	@Override
+	public void encode2(File message, File key, File encoded) {
+		String _message = readFile(message);
+		String _key = readFile(key);
+		
+		String codedMessage = swap(_message, Application.ROMAN_ALPHABET, _key);
+		
+		writeFile(encoded, codedMessage);
+	}
+
+	@Override
 	public void decode(File encoded, File key, File message) {
-		BufferedReader brCode = null, brKey = null;
-		String encodedMessage = "";
-		String _key = "";
+		String encodedMessage = readFile(encoded);
+		String _key = readFile(key);
 		
-		try {
-			String sCurrentLine;
-			brCode = new BufferedReader(new FileReader(encoded));
-			brKey = new BufferedReader(new FileReader(key));
+		String realMessage = swap(encodedMessage, _key, Application.ROMAN_ALPHABET);
+		
+		writeFile(message, realMessage);
+	}
+	
+	private String swap(String string, String swapFrom, String swapTo) {
+		String result = "";
+		for(int i = 0; i < string.length();i++) {
+			int index = swapFrom.indexOf(string.charAt(i), 0);
+			if(index != -1)
+				result += swapTo.charAt(index);
+			else
+				result += string.charAt(i);
+		}
+		
+		return result;
+	}
+	
 
-			while ((sCurrentLine = brCode.readLine()) != null) {
-				encodedMessage += sCurrentLine;
-			}
-			while ((sCurrentLine = brKey.readLine()) != null) {
-				_key += sCurrentLine;
-			}
- 
+	private void writeFile(File file, String string) {
+		BufferedWriter bw = null;
+		try {
+			bw = new BufferedWriter(new FileWriter(file));
+			bw.write(string);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (brCode != null) brCode.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		String realMessage = "";
-		for(int i = 0 ;i<encodedMessage.length();i++) {
-			int index = _key.indexOf(encodedMessage.charAt(i), 0);
-			realMessage += Application.ROMAN_ALPHABET.charAt(index);
-		}
-		
-		BufferedWriter decoded = null;
-		try {
-			decoded = new BufferedWriter(new FileWriter(message));
-			
-			decoded.write(realMessage);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (decoded != null) decoded.close();
+				if (bw != null) bw.close();
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}
 	}
-	
+
+	private String readFile(File file) {
+		BufferedReader br = null;
+		String string = "";
+		try {
+			String sCurrentLine;
+			br = new BufferedReader(new FileReader(file));
+			while ((sCurrentLine = br.readLine()) != null) {
+				string += sCurrentLine;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null) br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return string;
+	}
 
 	public String randomizeKey(String key) {
 		Random random = new Random();
