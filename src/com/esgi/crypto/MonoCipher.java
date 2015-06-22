@@ -53,8 +53,10 @@ public class MonoCipher implements ICipher {
 			String keyString = keyBuilder.toString();
 			StringBuilder result = new StringBuilder(content.length());
 			
+			String upperCaseAlphabet = Application.ROMAN_ALPHABET.toUpperCase();
+			
 			for (int i = 0 ; i < content.length() ; i++) {
-				result.append(keyString.charAt(Application.ROMAN_ALPHABET.toUpperCase().indexOf(content.charAt(i))));
+				result.append(keyString.charAt(upperCaseAlphabet.indexOf(content.charAt(i))));
 			}
 			FileWriter fw = new FileWriter(encoded.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
