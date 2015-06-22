@@ -71,7 +71,53 @@ public class MonoCipher implements ICipher {
 
 	@Override
 	public void decode(File encoded, File key, File message) {
+		BufferedReader brCode = null, brKey = null;
+		String encodedMessage = "";
+		String _key = "";
+		 
+		try {
+			String sCurrentLine;
+			brCode = new BufferedReader(new FileReader("resources\\encoded.txt"));
+			brKey = new BufferedReader(new FileReader("resources\\key.txt"));
+
+			while ((sCurrentLine = brCode.readLine()) != null) {
+				encodedMessage += sCurrentLine;
+			}
+			while ((sCurrentLine = brKey.readLine()) != null) {
+				_key += sCurrentLine;
+			}
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (brCode != null) brCode.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		encodedMessage = "bcde";
+		String realMessage = "";
+		for(int i = 0 ;i<encodedMessage.length();i++) {
+			int index = _key.indexOf(encodedMessage.charAt(i), 0);
+			realMessage += Application.ROMAN_ALPHABET.charAt(index);
+		}
 		
+		BufferedWriter decoded = null;
+		try {
+			decoded = new BufferedWriter(new FileWriter("resources\\message.txt"));
+			
+			decoded.write(realMessage);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (decoded != null) decoded.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 	
 	public String randomizeKey(String key) {
