@@ -14,6 +14,7 @@ public class Application {
 	public static void main(String[] args) {
 		MonoCipher monoCipher = new MonoCipher();
 		monoCipher.generateKey(new File(KEY_FILE));
+		monoCipher.encode(new File(MESSAGE_FILE), new File(KEY_FILE), new File(ENCODED_FILE));
 	}
 
 }

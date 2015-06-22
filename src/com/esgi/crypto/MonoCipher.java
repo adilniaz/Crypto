@@ -26,8 +26,22 @@ public class MonoCipher implements ICipher {
 	
 	@Override
 	public void encode(File message, File key, File encoded) {
-		// TODO Auto-generated method stub
-		
+		BufferedReader br = null;
+		try {
+			String sCurrentLine;
+			br = new BufferedReader(new FileReader(message));
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	@Override
