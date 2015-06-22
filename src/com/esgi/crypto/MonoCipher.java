@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class MonoCipher implements ICipher {
 	
@@ -74,11 +75,11 @@ public class MonoCipher implements ICipher {
 		BufferedReader brCode = null, brKey = null;
 		String encodedMessage = "";
 		String _key = "";
-		 
+		
 		try {
 			String sCurrentLine;
-			brCode = new BufferedReader(new FileReader("resources\\encoded.txt"));
-			brKey = new BufferedReader(new FileReader("resources\\key.txt"));
+			brCode = new BufferedReader(new FileReader(encoded));
+			brKey = new BufferedReader(new FileReader(key));
 
 			while ((sCurrentLine = brCode.readLine()) != null) {
 				encodedMessage += sCurrentLine;
@@ -96,7 +97,6 @@ public class MonoCipher implements ICipher {
 				ex.printStackTrace();
 			}
 		}
-		encodedMessage = "bcde";
 		String realMessage = "";
 		for(int i = 0 ;i<encodedMessage.length();i++) {
 			int index = _key.indexOf(encodedMessage.charAt(i), 0);
@@ -105,7 +105,7 @@ public class MonoCipher implements ICipher {
 		
 		BufferedWriter decoded = null;
 		try {
-			decoded = new BufferedWriter(new FileWriter("resources\\message.txt"));
+			decoded = new BufferedWriter(new FileWriter(message));
 			
 			decoded.write(realMessage);
 
@@ -120,9 +120,20 @@ public class MonoCipher implements ICipher {
 		}
 	}
 	
+
 	public String randomizeKey(String key) {
-		// TODO Auto-generated method stub
-		return key;
+		Random random = new Random();
+		int min = 0;
+		int max = key.length();
+		String result = "";
+		StringBuilder sb = new StringBuilder(key);
+		for (int i = 0; i < 26; i++) {
+			max = max-1;
+			int randomNumber = random.nextInt(max - min + 1) + min;
+			result += sb.charAt(randomNumber);
+			sb.deleteCharAt(randomNumber);	
+		}
+		return result;
 	}
 
 }
