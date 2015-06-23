@@ -55,13 +55,11 @@ public class MonoEncodedAttack {
 	}
 
 
-	public void frequencyComparison(HashMap<Character, Double> frequenceMap,
+	public void frequencyComparison(Map<Character, Double> frequenceMap,
 			Map<String, Double> frequenceToCompare) {
-		// TODO Auto-generated method stub
 		ArrayList<Double> list = new ArrayList<Double>();
 		for (Character c : frequenceMap.keySet()) {
 			list.add(frequenceMap.get(c));
-			
 		}
 		Collections.sort(list);
 		Collections.reverse(list);
@@ -70,14 +68,22 @@ public class MonoEncodedAttack {
 		for (int i = 0; i < list.size(); i++) {
 			for (Character c : frequenceMap.keySet()) {
 				if (frequenceMap.get(c).equals(list.get(i))) {
-					frequenceMap.put(c, (double) -1);
+					frequenceMap.put(c, -1.d);
 					key += c;
 				}
 			}
 		}
+		
+		displayFrequences(frequenceToCompare);
+		
 		System.out.println("key : "+key);
 	}
-
+	
+	public void displayFrequences(Map<String, Double> frequenceMap) {
+		for (String str : frequenceMap.keySet()) {
+			System.out.println("key = " + str + ", value = " + frequenceMap.get(str));
+		}
+	}
 
 	public HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
 		HashMap<Character,Double> frequenceMap = new HashMap<Character,Double>();
@@ -91,7 +97,7 @@ public class MonoEncodedAttack {
 			if (val != null) {
 				frequenceMap.put(c, new Double(val + 1));
 			} else {
-				frequenceMap.put(c, (double) 1);
+				frequenceMap.put(c, 1.d);
 			}
 		}
 		
