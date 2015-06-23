@@ -14,10 +14,16 @@ public class Application {
 	public static final String KEY_BASE = ROMAN_ALPHABET/* + PONCTUATION*/;
 	
 	public static void main(String[] args) {
-		System.out.println(PONCTUATION);
 		MonoCipher monoCipher = new MonoCipher();
-		monoCipher.generateKey(new File(KEY_FILE));
-//		monoCipher.encode(new File(MESSAGE_FILE), new File(KEY_FILE), new File(ENCODED_FILE));
+		
+		File key = new File(KEY_FILE);
+		File message = new File(MESSAGE_FILE);
+		File encoded = new File(ENCODED_FILE);
+		
+		monoCipher.generateKey(key);
+		monoCipher.encode2(message, key, encoded);
+		
+		//monoCipher.decode(encoded, key, message);
 	}
 
 }

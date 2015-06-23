@@ -71,10 +71,10 @@ public class MonoCipher implements ICipher {
 	}
 
 	public void encode2(File message, File key, File encoded) {
-		String _message = readFile(message);
-		String _key = readFile(key);
+		String messageText = readFile(message);
+		String keyText = readFile(key);
 		
-		String codedMessage = swap(_message, Application.ROMAN_ALPHABET, _key);
+		String codedMessage = swap(messageText, Application.ROMAN_ALPHABET, keyText);
 		
 		writeFile(encoded, codedMessage);
 	}
@@ -89,14 +89,14 @@ public class MonoCipher implements ICipher {
 		writeFile(message, realMessage);
 	}
 	
-	private String swap(String string, String swapFrom, String swapTo) {
+	private String swap(String messageText, String swapFrom, String swapTo) {
 		String result = "";
-		for(int i = 0; i < string.length();i++) {
-			int index = swapFrom.indexOf(string.charAt(i), 0);
+		for(int i = 0; i < messageText.length(); i++) {
+			int index = swapFrom.indexOf(messageText.charAt(i), 0);
 			if(index != -1)
 				result += swapTo.charAt(index);
 			else
-				result += string.charAt(i);
+				result += messageText.charAt(i);
 		}
 		
 		return result;
@@ -121,12 +121,12 @@ public class MonoCipher implements ICipher {
 
 	private String readFile(File file) {
 		BufferedReader br = null;
-		String string = "";
+		String result = "";
 		try {
 			String sCurrentLine;
 			br = new BufferedReader(new FileReader(file));
 			while ((sCurrentLine = br.readLine()) != null) {
-				string += sCurrentLine;
+				result += sCurrentLine;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -137,20 +137,19 @@ public class MonoCipher implements ICipher {
 				ex.printStackTrace();
 			}
 		}
-		return string;
+		return result;
 	}
 
 	public String randomizeKey(String key) {
 		Random random = new Random();
-		int min = 0;
 		int max = key.length();
 		String result = "";
 		StringBuilder sb = new StringBuilder(key);
-		for (int i = 0; i < 26; i++) {
-			max = max-1;
-			int randomNumber = random.nextInt(max - min + 1) + min;
+		for (int i = 0; i < key.length(); i++) {
+			max = max - 1;
+			int randomNumber = random.nextInt(max + 1);
 			result += sb.charAt(randomNumber);
-			sb.deleteCharAt(randomNumber);	
+			sb.deleteCharAt(randomNumber);
 		}
 		result += Application.PONCTUATION;
 		return result;
