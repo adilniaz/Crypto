@@ -56,32 +56,35 @@ public class MonoEncodedAttack {
 	}
 
 
-	private void frequencyComparison(HashMap<Character, Double> map,
-			Map<String, Double> frequences2) {
+	private void frequencyComparison(HashMap<Character, Double> frequenceMap,
+			Map<String, Double> frequenceToCompare) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	private HashMap<Character, Double> calculateCharacterFrequency(File file) {
-		HashMap<Character,Double> map = new HashMap<Character,Double>();
-		String s = fileHandler.readFile(file);
+	private HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
+		HashMap<Character,Double> frequenceMap = new HashMap<Character,Double>();
+		String encodedMessage = fileHandler.readFile(encoded);
+		
 		for (int i = 0; i < Application.PONCTUATION.length(); i++) {
-			s = s.replace(Application.PONCTUATION.charAt(i), ' ');
+			encodedMessage = encodedMessage.replace(Application.PONCTUATION.charAt(i), ' ');
 		}
-		s = s.replaceAll(" ", "");
-		for(int i = 0; i < s.length(); i++){
-		   char c = s.charAt(i);
-		   Double val = map.get(new Character(c));
-		   if(val != null){
-		     map.put(c, new Double(val + 1));
-		   }else{
-		     map.put(c,(double) 1);
-		   }
+		encodedMessage = encodedMessage.replaceAll(" ", "");
+		
+		for (int i = 0; i < encodedMessage.length(); i++) {
+			char c = encodedMessage.charAt(i);
+			Double val = frequenceMap.get(new Character(c));
+			if (val != null) {
+				frequenceMap.put(c, new Double(val + 1));
+			} else {
+				frequenceMap.put(c, (double) 1);
+			}
 		}
-		for (char c : map.keySet()) {
-		     map.put(c,(map.get(c)/s.length())*100);
+		
+		for (char c : frequenceMap.keySet()) {
+			frequenceMap.put(c, (frequenceMap.get(c) / encodedMessage.length()) * 100);
 		}
-		return map;
+		return frequenceMap;
 	}
 }
