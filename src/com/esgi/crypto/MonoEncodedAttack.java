@@ -1,15 +1,16 @@
 package com.esgi.crypto;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MonoEncodedAttack {
+	
+	private FileHandler fileHandler;
+	
+	public MonoEncodedAttack(FileHandler fileHandler) {
+		this.fileHandler = fileHandler;
+	}
 	
 	private static final Map<String, Double> frequences = new HashMap<>();
     static {
@@ -47,7 +48,7 @@ public class MonoEncodedAttack {
 		frequencyComparison(map, frequences);
 		
 		String key = "";
-		writeFile(foundKey, key);
+		fileHandler.writeFile(foundKey, key);
 		
 		for (char c : map.keySet()) {
 			System.out.println(c + " : " + map.get(c));
@@ -64,7 +65,7 @@ public class MonoEncodedAttack {
 
 	private HashMap<Character, Double> calculateCharacterFrequency(File file) {
 		HashMap<Character,Double> map = new HashMap<Character,Double>();
-		String s = readFile(file);
+		String s = fileHandler.readFile(file);
 		for (int i = 0; i < Application.PONCTUATION.length(); i++) {
 			s = s.replace(Application.PONCTUATION.charAt(i), ' ');
 		}
@@ -82,43 +83,5 @@ public class MonoEncodedAttack {
 		     map.put(c,(map.get(c)/s.length())*100);
 		}
 		return map;
-	}
-	
-
-	private String readFile(File file) {
-		BufferedReader br = null;
-		String result = "";
-		try {
-			String sCurrentLine;
-			br = new BufferedReader(new FileReader(file));
-			while ((sCurrentLine = br.readLine()) != null) {
-				result += sCurrentLine;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null) br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return result;
-	}
-
-	private void writeFile(File file, String string) {
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(file));
-			bw.write(string);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bw != null) bw.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 }

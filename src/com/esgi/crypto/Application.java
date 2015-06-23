@@ -14,8 +14,11 @@ public class Application {
 	
 	public static final String KEY_BASE = ROMAN_ALPHABET/* + PONCTUATION*/;
 	
-	public static void main(String[] args) {
-		MonoCipher monoCipher = new MonoCipher();
+	private FileHandler fileHandler;
+	
+	public Application() {
+		fileHandler = new FileHandler();
+		MonoCipher monoCipher = new MonoCipher(fileHandler);
 		
 		File key = new File(KEY_FILE);
 		File message = new File(MESSAGE_FILE);
@@ -25,8 +28,12 @@ public class Application {
 //		monoCipher.generateKey(key);
 		monoCipher.encode2(message, key, encoded);
 		
-		MonoEncodedAttack m = new MonoEncodedAttack();
+		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
 		m.findKey(encoded, foundKey);
+	}
+	
+	public static void main(String[] args) {
+		Application app = new Application();
 	}
 
 }

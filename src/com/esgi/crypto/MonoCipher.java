@@ -10,6 +10,12 @@ import java.util.Random;
 
 public class MonoCipher implements ICipher {
 	
+	private FileHandler fileHandler;
+	
+	public MonoCipher(FileHandler fileHandler) {
+		this.fileHandler = fileHandler;
+	}
+	
 	@Override
 	public void generateKey(File key) {
 		FileWriter fw = null;
@@ -71,22 +77,22 @@ public class MonoCipher implements ICipher {
 	}
 
 	public void encode2(File message, File key, File encoded) {
-		String messageText = readFile(message);
-		String keyText = readFile(key);
+		String messageText = fileHandler.readFile(message);
+		String keyText = fileHandler.readFile(key);
 		
 		String codedMessage = swap(messageText, Application.ROMAN_ALPHABET, keyText);
 		
-		writeFile(encoded, codedMessage);
+		fileHandler.writeFile(encoded, codedMessage);
 	}
 
 	@Override
 	public void decode(File encoded, File key, File message) {
-		String encodedMessage = readFile(encoded);
-		String _key = readFile(key);
+		String encodedMessage = fileHandler.readFile(encoded);
+		String _key = fileHandler.readFile(key);
 		
 		String realMessage = swap(encodedMessage, _key, Application.ROMAN_ALPHABET);
 		
-		writeFile(message, realMessage);
+		fileHandler.writeFile(message, realMessage);
 	}
 	
 	private String swap(String messageText, String swapFrom, String swapTo) {
@@ -99,44 +105,6 @@ public class MonoCipher implements ICipher {
 				result += messageText.charAt(i);
 		}
 		
-		return result;
-	}
-	
-
-	private void writeFile(File file, String string) {
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(file));
-			bw.write(string);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bw != null) bw.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
-	private String readFile(File file) {
-		BufferedReader br = null;
-		String result = "";
-		try {
-			String sCurrentLine;
-			br = new BufferedReader(new FileReader(file));
-			while ((sCurrentLine = br.readLine()) != null) {
-				result += sCurrentLine;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null) br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
 		return result;
 	}
 
