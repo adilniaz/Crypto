@@ -11,7 +11,7 @@ import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
 import com.esgi.crypto.Symbol;
 
-public class MonoEncodedAttack {
+public class MonoAttack {
 	
 	private FileHandler fileHandler;
 	
@@ -27,7 +27,7 @@ public class MonoEncodedAttack {
 		}
 	};
 	
-	public MonoEncodedAttack(FileHandler fileHandler) {
+	public MonoAttack(FileHandler fileHandler) {
 		this.fileHandler = fileHandler;
 		
 		frequenceRef = new ArrayList<Symbol>();
