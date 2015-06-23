@@ -96,10 +96,11 @@ public class MonoCipher implements ICipher {
 	}
 	
 	private String swap(String messageText, String swapFrom, String swapTo) {
+		/*
 		messageText = messageText.toLowerCase();
 		swapFrom = swapFrom.toLowerCase();
 		swapTo = swapTo.toLowerCase();
-		
+		*/
 		String result = "";
 		for(int i = 0; i < messageText.length(); i++) {
 			int index = swapFrom.indexOf(messageText.charAt(i), 0);

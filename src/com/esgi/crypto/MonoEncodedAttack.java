@@ -46,7 +46,6 @@ public class MonoEncodedAttack {
 	
 	public void findKey(File encoded, File foundKey) {
 		HashMap<Character, Double> map = calculateCharacterFrequency(encoded);
-		
 		frequencyComparison(map, frequences);
 		
 		String key = "";
@@ -57,7 +56,7 @@ public class MonoEncodedAttack {
 
 	public void frequencyComparison(HashMap<Character, Double> frequenceMap,
 			Map<String, Double> frequenceToCompare) {
-		// TODO Auto-generated method stub
+		
 		ArrayList<Double> list = new ArrayList<Double>();
 		for (Character c : frequenceMap.keySet()) {
 			list.add(frequenceMap.get(c));
@@ -82,7 +81,6 @@ public class MonoEncodedAttack {
 	public HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
 		HashMap<Character,Double> frequenceMap = new HashMap<Character,Double>();
 		String encodedMessage = fileHandler.readFile(encoded);
-		
 		encodedMessage = deleteCharacters(encodedMessage, Application.PONCTUATION);
 		
 		for (int i = 0; i < encodedMessage.length(); i++) {
@@ -97,6 +95,18 @@ public class MonoEncodedAttack {
 		
 		for (char c : frequenceMap.keySet()) {
 			frequenceMap.put(c, (frequenceMap.get(c) / encodedMessage.length()) * 100);
+		}
+		
+		String str = "";
+		for (int i = 0; i < Application.ROMAN_ALPHABET.length(); i++) {
+			if (!frequenceMap.containsKey(Application.ROMAN_ALPHABET.charAt(i))) {
+				str += Application.ROMAN_ALPHABET.charAt(i);
+			}
+		}
+		
+		
+		for (int i = 0; i < str.length(); i++) {
+			frequenceMap.put(str.charAt(i), (double) 0);
 		}
 		return frequenceMap;
 	}
