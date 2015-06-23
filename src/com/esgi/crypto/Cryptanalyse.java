@@ -1,7 +1,9 @@
 package com.esgi.crypto;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Cryptanalyse {
@@ -40,6 +42,28 @@ public class Cryptanalyse {
 		}
 		System.out.println("finded key : " + builder.toString());
 		System.out.println("real key : " + key);
+	}
+	
+	public void bruteForceCaesar (File encodedFile, File messageFile) {
+		FileHandler handler = new FileHandler();
+		String encodedMessage = handler.readFile(encodedFile);
+		String alphabet = Application.ROMAN_ALPHABET;
+		int nbCharacter = alphabet.length();
+		List<Integer> processIndices = new ArrayList<>();
+		for (int i = 0 ; i < nbCharacter ; i++) {
+			int decalage = i+1;
+			for (int j = 0 ; j < nbCharacter ; j++) {
+				char character = alphabet.charAt(j);
+				for (int k = 0 ; k < encodedMessage.length() ; k++) {
+					if (!processIndices.contains(k)) {
+						encodedMessage = encodedMessage.replace(character, alphabet.charAt((decalage+j)%nbCharacter));
+						processIndices.add(k);
+					}
+				}
+			}
+			System.out.println("key : " + alphabet.charAt(i));
+			System.out.println(encodedMessage);
+		}
 	}
 
 }
