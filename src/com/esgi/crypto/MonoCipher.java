@@ -70,7 +70,6 @@ public class MonoCipher implements ICipher {
 		}
 	}
 
-	@Override
 	public void encode2(File message, File key, File encoded) {
 		String _message = readFile(message);
 		String _key = readFile(key);
@@ -153,6 +152,7 @@ public class MonoCipher implements ICipher {
 			result += sb.charAt(randomNumber);
 			sb.deleteCharAt(randomNumber);	
 		}
+		result += Application.PONCTUATION;
 		return result;
 	}
 
