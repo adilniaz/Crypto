@@ -47,34 +47,38 @@ public class MonoEncodedAttack {
 	public void findKey(File encoded, File foundKey) {
 		HashMap<Character, Double> map = calculateCharacterFrequency(encoded);
 		frequencyComparison(map, frequences);
-		
-		String key = "";
+		String key = frequencyComparison(map, frequences);
+
 		fileHandler.writeFile(foundKey, key);
 		
+		MonoCipher m = new MonoCipher(fileHandler);
+		m.decode(encoded, foundKey, new File("resources/test.txt"));
 	}
 
 
-	public void frequencyComparison(HashMap<Character, Double> frequenceMap,
+	public String frequencyComparison(HashMap<Character, Double> frequenceMap,
 			Map<String, Double> frequenceToCompare) {
 		
 		ArrayList<Double> list = new ArrayList<Double>();
 		for (Character c : frequenceMap.keySet()) {
 			list.add(frequenceMap.get(c));
-			
 		}
 		Collections.sort(list);
 		Collections.reverse(list);
 		String key = "";
+		String res = "";
 		
 		for (int i = 0; i < list.size(); i++) {
 			for (Character c : frequenceMap.keySet()) {
-				if (frequenceMap.get(c).equals(list.get(i))) {
+				res += c;
+				if (frequenceMap.get(c) == list.get(i)) {
 					frequenceMap.put(c, (double) -1);
 					key += c;
 				}
 			}
 		}
-		System.out.println("key : "+key);
+		
+		return key;
 	}
 
 
@@ -104,10 +108,10 @@ public class MonoEncodedAttack {
 			}
 		}
 		
-		
 		for (int i = 0; i < str.length(); i++) {
 			frequenceMap.put(str.charAt(i), (double) 0);
 		}
+		
 		return frequenceMap;
 	}
 	

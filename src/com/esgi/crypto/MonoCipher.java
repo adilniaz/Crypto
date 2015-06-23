@@ -91,6 +91,7 @@ public class MonoCipher implements ICipher {
 		String _key = fileHandler.readFile(key);
 		
 		String realMessage = swap(encodedMessage, _key, Application.ROMAN_ALPHABET);
+		System.out.println("Application.ROMAN_ALPHABET : " + Application.ROMAN_ALPHABET);
 		
 		fileHandler.writeFile(message, realMessage);
 	}
@@ -124,7 +125,9 @@ public class MonoCipher implements ICipher {
 			result += sb.charAt(randomNumber);
 			sb.deleteCharAt(randomNumber);
 		}
+		/*
 		result += Application.PONCTUATION;
+		*/
 		return result;
 	}
 
