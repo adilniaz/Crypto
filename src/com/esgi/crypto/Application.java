@@ -25,8 +25,8 @@ public class Application {
 		File encoded = new File(ENCODED_FILE);
 		File foundKey = new File(FOUND_KEY_FILE);
 		
-		//monoCipher.generateKey(key);
-		monoCipher.encode2(message, key, encoded);
+//		monoCipher.generateKey(key);
+//		monoCipher.encode2(message, key, encoded);
 		
 		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
 		m.findKey(encoded, foundKey);

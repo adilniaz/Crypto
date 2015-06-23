@@ -46,7 +46,6 @@ public class MonoEncodedAttack {
 	
 	public void findKey(File encoded, File foundKey) {
 		HashMap<Character, Double> map = calculateCharacterFrequency(encoded);
-		
 		frequencyComparison(map, frequences);
 		
 		String key = "";
@@ -55,11 +54,13 @@ public class MonoEncodedAttack {
 	}
 
 
-	public void frequencyComparison(Map<Character, Double> frequenceMap,
+	public void frequencyComparison(HashMap<Character, Double> frequenceMap,
 			Map<String, Double> frequenceToCompare) {
+		
 		ArrayList<Double> list = new ArrayList<Double>();
 		for (Character c : frequenceMap.keySet()) {
 			list.add(frequenceMap.get(c));
+			
 		}
 		Collections.sort(list);
 		Collections.reverse(list);
@@ -68,27 +69,18 @@ public class MonoEncodedAttack {
 		for (int i = 0; i < list.size(); i++) {
 			for (Character c : frequenceMap.keySet()) {
 				if (frequenceMap.get(c).equals(list.get(i))) {
-					frequenceMap.put(c, -1.d);
+					frequenceMap.put(c, (double) -1);
 					key += c;
 				}
 			}
 		}
-		
-		displayFrequences(frequenceToCompare);
-		
 		System.out.println("key : "+key);
 	}
-	
-	public void displayFrequences(Map<String, Double> frequenceMap) {
-		for (String str : frequenceMap.keySet()) {
-			System.out.println("key = " + str + ", value = " + frequenceMap.get(str));
-		}
-	}
+
 
 	public HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
 		HashMap<Character,Double> frequenceMap = new HashMap<Character,Double>();
 		String encodedMessage = fileHandler.readFile(encoded);
-		
 		encodedMessage = deleteCharacters(encodedMessage, Application.PONCTUATION);
 		
 		for (int i = 0; i < encodedMessage.length(); i++) {
@@ -97,12 +89,24 @@ public class MonoEncodedAttack {
 			if (val != null) {
 				frequenceMap.put(c, new Double(val + 1));
 			} else {
-				frequenceMap.put(c, 1.d);
+				frequenceMap.put(c, (double) 1);
 			}
 		}
 		
 		for (char c : frequenceMap.keySet()) {
 			frequenceMap.put(c, (frequenceMap.get(c) / encodedMessage.length()) * 100);
+		}
+		
+		String str = "";
+		for (int i = 0; i < Application.ROMAN_ALPHABET.length(); i++) {
+			if (!frequenceMap.containsKey(Application.ROMAN_ALPHABET.charAt(i))) {
+				str += Application.ROMAN_ALPHABET.charAt(i);
+			}
+		}
+		
+		
+		for (int i = 0; i < str.length(); i++) {
+			frequenceMap.put(str.charAt(i), (double) 0);
 		}
 		return frequenceMap;
 	}
