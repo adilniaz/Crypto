@@ -16,7 +16,7 @@ public class MonoEncodedAttack {
         frequences.put("E", 14.715);
         frequences.put("S", 7.948);
         frequences.put("A", 7.636);
-        frequences.put("I", 7.529);
+        frequences.put("I", 7.529); 
         frequences.put("T", 7.244);
         frequences.put("N", 7.095);
         frequences.put("R", 6.553);
@@ -42,25 +42,9 @@ public class MonoEncodedAttack {
     }
 	
 	public void findKey(File encoded, File foundKey) {
-		HashMap<Character,Float> map = new HashMap<Character,Float>();
-		String s = readFile(encoded);
-		for (int i = 0; i < Application.PONCTUATION.length(); i++) {
-			s = s.replace(Application.PONCTUATION.charAt(i), ' ');
-		}
-		s = s.replaceAll(" ", "");
-		for(int i = 0; i < s.length(); i++){
-		   char c = s.charAt(i);
-		   Float val = map.get(new Character(c));
-		   if(val != null){
-		     map.put(c, new Float(val + 1));
-		   }else{
-		     map.put(c,(float) 1);
-		   }
-		}
-		for (char c : map.keySet()) {
-		     map.put(c,(map.get(c)/s.length())*100);
-		}
+		HashMap<Character, Double> map = calculateCharacterFrequency(encoded);
 		
+		frequencyComparison(map, frequences);
 		
 		String key = "";
 		writeFile(foundKey, key);
@@ -68,6 +52,36 @@ public class MonoEncodedAttack {
 		for (char c : map.keySet()) {
 			System.out.println(c + " : " + map.get(c));
 		}
+	}
+
+
+	private void frequencyComparison(HashMap<Character, Double> map,
+			Map<String, Double> frequences2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	private HashMap<Character, Double> calculateCharacterFrequency(File file) {
+		HashMap<Character,Double> map = new HashMap<Character,Double>();
+		String s = readFile(file);
+		for (int i = 0; i < Application.PONCTUATION.length(); i++) {
+			s = s.replace(Application.PONCTUATION.charAt(i), ' ');
+		}
+		s = s.replaceAll(" ", "");
+		for(int i = 0; i < s.length(); i++){
+		   char c = s.charAt(i);
+		   Double val = map.get(new Character(c));
+		   if(val != null){
+		     map.put(c, new Double(val + 1));
+		   }else{
+		     map.put(c,(double) 1);
+		   }
+		}
+		for (char c : map.keySet()) {
+		     map.put(c,(map.get(c)/s.length())*100);
+		}
+		return map;
 	}
 	
 
