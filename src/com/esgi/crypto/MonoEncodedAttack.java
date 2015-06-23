@@ -59,8 +59,8 @@ public class MonoEncodedAttack {
 			Map<String, Double> frequenceToCompare) {
 		// TODO Auto-generated method stub
 		ArrayList<Double> list = new ArrayList<Double>();
-		for (Character c : map.keySet()) {
-			list.add(map.get(c));
+		for (Character c : frequenceMap.keySet()) {
+			list.add(frequenceMap.get(c));
 			
 		}
 		Collections.sort(list);
@@ -68,9 +68,9 @@ public class MonoEncodedAttack {
 		String key = "";
 		
 		for (int i = 0; i < list.size(); i++) {
-			for (Character c : map.keySet()) {
-				if (map.get(c).equals(list.get(i))) {
-					map.put(c, (double) -1);
+			for (Character c : frequenceMap.keySet()) {
+				if (frequenceMap.get(c).equals(list.get(i))) {
+					frequenceMap.put(c, (double) -1);
 					key += c;
 				}
 			}
