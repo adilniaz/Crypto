@@ -1,6 +1,8 @@
 package com.esgi.crypto;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,16 +52,30 @@ public class MonoEncodedAttack {
 		String key = "";
 		fileHandler.writeFile(foundKey, key);
 		
-		for (char c : map.keySet()) {
-			System.out.println(c + " : " + map.get(c));
-		}
 	}
 
 
 	private void frequencyComparison(HashMap<Character, Double> map,
 			Map<String, Double> frequences2) {
 		// TODO Auto-generated method stub
+		ArrayList<Double> list = new ArrayList<Double>();
+		for (Character c : map.keySet()) {
+			list.add(map.get(c));
+			
+		}
+		Collections.sort(list);
+		Collections.reverse(list);
+		String key = "";
 		
+		for (int i = 0; i < list.size(); i++) {
+			for (Character c : map.keySet()) {
+				if (map.get(c).equals(list.get(i))) {
+					map.put(c, (double) -1);
+					key += c;
+				}
+			}
+		}
+		System.out.println("key : "+key);
 	}
 
 
@@ -82,6 +98,7 @@ public class MonoEncodedAttack {
 		for (char c : map.keySet()) {
 		     map.put(c,(map.get(c)/s.length())*100);
 		}
+
 		return map;
 	}
 }
