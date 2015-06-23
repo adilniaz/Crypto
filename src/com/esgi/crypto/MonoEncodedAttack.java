@@ -56,21 +56,18 @@ public class MonoEncodedAttack {
 	}
 
 
-	private void frequencyComparison(HashMap<Character, Double> frequenceMap,
+	public void frequencyComparison(HashMap<Character, Double> frequenceMap,
 			Map<String, Double> frequenceToCompare) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	private HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
+	public HashMap<Character, Double> calculateCharacterFrequency(File encoded) {
 		HashMap<Character,Double> frequenceMap = new HashMap<Character,Double>();
 		String encodedMessage = fileHandler.readFile(encoded);
 		
-		for (int i = 0; i < Application.PONCTUATION.length(); i++) {
-			encodedMessage = encodedMessage.replace(Application.PONCTUATION.charAt(i), ' ');
-		}
-		encodedMessage = encodedMessage.replaceAll(" ", "");
+		encodedMessage = deleteCharacters(encodedMessage, Application.PONCTUATION);
 		
 		for (int i = 0; i < encodedMessage.length(); i++) {
 			char c = encodedMessage.charAt(i);
@@ -86,5 +83,14 @@ public class MonoEncodedAttack {
 			frequenceMap.put(c, (frequenceMap.get(c) / encodedMessage.length()) * 100);
 		}
 		return frequenceMap;
+	}
+	
+	public String deleteCharacters(String text, String charaters) {
+		for (int i = 0; i < charaters.length(); i++) {
+			text = text.replace(charaters.charAt(i), ' ');
+		}
+		text = text.replaceAll(" ", "");
+		
+		return text;
 	}
 }
