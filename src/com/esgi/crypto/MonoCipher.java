@@ -33,8 +33,50 @@ public class MonoCipher implements ICipher {
 			} catch (IOException e) {}
 		}
 	}
-
+	
+	@Override
 	public void encode(File message, File key, File encoded) {
+		BufferedReader br = null;
+		StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder keyBuilder = new StringBuilder();
+		try {
+			String sCurrentLine;
+			br = new BufferedReader(new FileReader(message));
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+				stringBuilder.append(sCurrentLine);
+			}
+			if (br != null)br.close();
+		
+			br = new BufferedReader(new FileReader(key));
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+				keyBuilder.append(sCurrentLine);
+			}
+			if (br != null)br.close();
+			
+			if (!encoded.exists()) {
+				encoded.createNewFile();
+			}
+			String content = stringBuilder.toString();
+			String keyString = keyBuilder.toString();
+			StringBuilder result = new StringBuilder(content.length());
+			
+			String upperCaseAlphabet = Application.ROMAN_ALPHABET.toUpperCase();
+			
+			for (int i = 0 ; i < content.length() ; i++) {
+				result.append(keyString.charAt(upperCaseAlphabet.indexOf(content.charAt(i))));
+			}
+			FileWriter fw = new FileWriter(encoded.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(result.toString());
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void encode2(File message, File key, File encoded) {
 		String messageText = fileHandler.readFile(message);
 		String keyText = fileHandler.readFile(key);
 		
@@ -46,14 +88,15 @@ public class MonoCipher implements ICipher {
 	@Override
 	public void decode(File encoded, File key, File message) {
 		String encodedMessage = fileHandler.readFile(encoded);
-		String keyText = fileHandler.readFile(key);
+		String _key = fileHandler.readFile(key);
 		
-		String realMessage = swap(encodedMessage, keyText, Application.ROMAN_ALPHABET);
+		String realMessage = swap(encodedMessage, _key, Application.ROMAN_ALPHABET);
+		System.out.println("Application.ROMAN_ALPHABET : " + Application.ROMAN_ALPHABET);
 		
 		fileHandler.writeFile(message, realMessage);
 	}
 	
-	public String swap(String messageText, String swapFrom, String swapTo) {
+	private String swap(String messageText, String swapFrom, String swapTo) {
 		/*
 		messageText = messageText.toLowerCase();
 		swapFrom = swapFrom.toLowerCase();
@@ -82,7 +125,9 @@ public class MonoCipher implements ICipher {
 			result += sb.charAt(randomNumber);
 			sb.deleteCharAt(randomNumber);
 		}
-		//result += Application.PONCTUATION;
+		/*
+		result += Application.PONCTUATION;
+		*/
 		return result;
 	}
 
