@@ -48,22 +48,30 @@ public class Cryptanalyse {
 	public void bruteForceCaesar (File encodedFile, File messageFile) {
 		FileHandler handler = new FileHandler();
 		String encodedMessage = handler.readFile(encodedFile);
+		StringBuilder decodedMessage;
 		String alphabet = Application.ROMAN_ALPHABET;
 		int nbCharacter = alphabet.length();
 		List<Integer> processIndices = new ArrayList<>();
 		for (int i = 0 ; i < nbCharacter ; i++) {
 			int decalage = i+1;
+			decodedMessage = new StringBuilder(encodedMessage);
 			for (int j = 0 ; j < nbCharacter ; j++) {
 				char character = alphabet.charAt(j);
+				char remplacement = alphabet.charAt((nbCharacter-decalage+j)%nbCharacter);
 				for (int k = 0 ; k < encodedMessage.length() ; k++) {
 					if (!processIndices.contains(k)) {
-						encodedMessage = encodedMessage.replace(character, alphabet.charAt((decalage+j)%nbCharacter));
-						processIndices.add(k);
+						if (decodedMessage.charAt(k) == character) {
+							decodedMessage.setCharAt(k, remplacement);
+							processIndices.add(k);
+						}
 					}
 				}
 			}
 			System.out.println("key : " + alphabet.charAt(i));
-			System.out.println(encodedMessage);
+			System.out.println(decodedMessage);
+			while (!processIndices.isEmpty()) {
+				processIndices.remove(0);
+			}
 		}
 	}
 	
