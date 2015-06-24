@@ -55,6 +55,10 @@ public class FileHandler {
 			fis = new FileInputStream(file);
 			int c = 0;
 			
+			// int nbBytes = 0;
+			// while ((nbBytes = fis.read()) != 0) {
+			//	byte[] b = new Byte[nbBytes];
+			//}
 			while ((c = fis.read()) != -1) {
 				int lastChar = 0;
 				if (c == ';' && lastChar != ';') {
