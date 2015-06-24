@@ -49,6 +49,31 @@ public class HomophonicCipher implements ICipher{
 		decodingMap = new HashMap<Byte[], Character>();
 		
 		byte[] keyArray = read(key.getAbsolutePath());
+		
+		int index = 0;
+		int incr = 0;
+		int hIndex = 0;
+		while (index < keyArray.length-1) {
+			System.out.println(index + " " + );
+			if (hIndex<Application.HOMONOPHONIC.length()) {
+				
+				incr = keyArray[index];
+				int indTmp = index;
+				int arrIndex = 0;
+				Byte[] tmpArr = new Byte[incr];
+				for (int i = index+1; i <= incr+indTmp; i++) {
+					tmpArr[arrIndex] = keyArray[i];
+					index++;
+					arrIndex++;
+				}
+				char ch = Application.HOMONOPHONIC.charAt(hIndex);
+				decodingMap.put(tmpArr, ch);
+				
+				hIndex++;
+				index++;
+			}
+		}
+
 		byte[] encodedArray = read(encoded.getAbsolutePath());
 		
 		List<Byte> encodedList = new ArrayList<Byte>();
@@ -56,27 +81,6 @@ public class HomophonicCipher implements ICipher{
 		for (int i = 0; i < encodedArray.length; i++) {
 			encodedList.add(encodedArray[i]);
 		}
-		
-		int index = 0;
-		int incr = 0;
-		int hIndex = 0;
-		while (index < keyArray.length-1) {
-			incr = keyArray[index];
-			int indTmp = index;
-			int arrIndex = 0;
-			Byte[] tmpArr = new Byte[incr];
-			for (int i = index+1; i <= incr+indTmp; i++) {
-				tmpArr[arrIndex] = keyArray[i];
-				index++;
-				arrIndex++;
-			}
-			char ch = Application.HOMONOPHONIC.charAt(hIndex);
-			decodingMap.put(tmpArr, ch);
-			
-			hIndex++;
-			index++;
-		}
-		
 		index = 0;
 		String messageHolder = "";
 		while (!encodedList.isEmpty()) {

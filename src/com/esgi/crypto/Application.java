@@ -104,8 +104,8 @@ public class Application {
 		File message = new File(MESSAGE_FILE);
 		File encoded = new File(ENCODED_FILE);
 		
-		FrequencyCalculator fC = new FrequencyCalculator();
-		fC.calculateCharacterFrequency();
+//		FrequencyCalculator fC = new FrequencyCalculator();
+//		fC.calculateCharacterFrequency();
 		
 		
 //		monoCipher.generateKey(key);
@@ -119,6 +119,7 @@ public class Application {
 //		cesarCipher.decode(encoded, key, message);
 		
 		HomophonicCipher hC = new HomophonicCipher(fileHandler);
+//		hC.generateKey(key);
 //		hC.encode(message, key, encoded);
 		hC.decode(encoded, key, message);
 	}
