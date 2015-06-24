@@ -3,6 +3,7 @@ package com.esgi.crypto;
 import java.io.File;
 
 import com.esgi.crypto.cesar.CesarCipher;
+import com.esgi.crypto.homophonic.HomophonicCipher;
 
 public class Application {
 
@@ -13,6 +14,8 @@ public class Application {
 	
 	public static final String ROMAN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String PONCTUATION = " _.,;:\"'";
+	
+	public static final String HOMONOPHONIC = " !\"'(),-./0123456789:;<=>?@ÀABÂCDEFGÇHÈIÉÊJKËLMNÎOÏPQRŒSTÔUVWXYÙZÛ_`";
 	
 	public static final String KEY_BASE = ROMAN_ALPHABET/* + PONCTUATION*/;
 	
@@ -25,16 +28,21 @@ public class Application {
 		File key = new File(KEY_FILE);
 		File message = new File(MESSAGE_FILE);
 		File encoded = new File(ENCODED_FILE);
-//		
+		
+		
 //		monoCipher.generateKey(key);
 //		monoCipher.encode(message, key, encoded);
 //		
 //		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
 //		m.findKey(encoded, foundKey);
 		
-		CesarCipher cesarCipher = new CesarCipher(fileHandler);
-		cesarCipher.encode(message, key, encoded);
-		//cesarCipher.decode(encoded, key, message);
+//		CesarCipher cesarCipher = new CesarCipher(fileHandler);
+//		cesarCipher.encode(message, key, encoded);
+//		cesarCipher.decode(encoded, key, message);
+		
+		HomophonicCipher hC = new HomophonicCipher(fileHandler);
+//		hC.encode(message, key, encoded);
+		hC.decode(encoded, key, message);
 	}
 	
 	public static void main(String[] args) {

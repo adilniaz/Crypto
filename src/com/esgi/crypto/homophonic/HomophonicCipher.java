@@ -42,7 +42,6 @@ public class HomophonicCipher implements ICipher{
 		
 		generateKey(key);
 		
-
 		String mess = fileHandler.readFile(message);
 		List<Byte> byteList = new ArrayList<Byte>();
 		for (int i = 0; i < mess.length(); i++) {
@@ -117,14 +116,6 @@ public class HomophonicCipher implements ICipher{
 		}
 		
 		System.out.println(messageHolder);
-	}
-	
-	private void waits() {
-		try {
-		    Thread.sleep(100);
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
 	}
 	
 	public byte[] read(String aInputFileName){
