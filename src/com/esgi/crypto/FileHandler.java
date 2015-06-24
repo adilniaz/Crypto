@@ -1,5 +1,6 @@
 package com.esgi.crypto;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -97,6 +98,26 @@ public class FileHandler {
 			}
 		}
 		return result;
+	}
+	
+	public void writeByteFile(File file, byte[] byteArray) {
+		BufferedOutputStream bs = null;
+		try {
+		    FileOutputStream fs = new FileOutputStream(file);
+		    bs = new BufferedOutputStream(fs);
+		    bs.write(byteArray);
+		    bs.close();
+		    bs = null;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		if (bs != null) {
+			try { 
+				bs.close(); 
+			} catch (Exception e) {
+				
+			}
+		}
 	}
 
 }
