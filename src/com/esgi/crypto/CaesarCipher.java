@@ -3,7 +3,7 @@ package com.esgi.crypto;
 import java.io.File;
 import java.util.Random;
 
-public class CaesarCipher {
+public class CaesarCipher implements ICipher{
 
 	private FileHandler fileHandler;
 	
@@ -15,6 +15,7 @@ public class CaesarCipher {
 		this.fileHandler = fileHandler;
 	}
 	
+	@Override
 	public void encode(File message, File key, File encoded) {
 		String mess = fileHandler.readFile(message);
 		String _key = fileHandler.readFile(key);
@@ -22,7 +23,8 @@ public class CaesarCipher {
 		String coded = swap(mess, array, _key);
 		fileHandler.writeFile(encoded, coded);
 	}
-	
+
+	@Override
 	public void decode(File encoded, File key, File message) {
 		String code = fileHandler.readFile(encoded);
 		String _key = fileHandler.readFile(key);
@@ -71,5 +73,17 @@ public class CaesarCipher {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void generateKey(File key) {
+//		fileHandler.writeFile(key, RandomKeyGenerator());
+	}
+
+	private char RandomKeyGenerator() {
+		Random random = new Random();
+		int max = array.length();
+		int randomNumber = random.nextInt(max + 1);
+		return array.charAt(randomNumber);
 	}
 }

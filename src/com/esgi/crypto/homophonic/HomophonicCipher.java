@@ -10,6 +10,7 @@ import java.util.Random;
 
 import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
+import com.esgi.crypto.FrequencyCalculator;
 import com.esgi.crypto.ICipher;
 
 public class HomophonicCipher implements ICipher{
@@ -28,12 +29,11 @@ public class HomophonicCipher implements ICipher{
 		this.weightMap = new HashMap<Character, Integer>();
 		this.encodingMap = new HashMap<Character, Byte[]>();
 		this.decodingMap = new HashMap<Byte[], Character>();
+		this.frequencyMap = Application.frequencies;
 	}
 	
 	@Override
 	public void encode(File message, File key, File encoded) {
-		calculateCharacterFrequency(new File("resources/freqCalcFile.txt"));
-		assignWeight();
 		
 		generateKey(key);
 		
@@ -114,6 +114,7 @@ public class HomophonicCipher implements ICipher{
 	
 	@Override
 	public void generateKey(File key) {
+		assignWeight();
 		byte[] byte_array = new byte[values];
 		
 		for (int i = 0; i < byte_array.length; i++) {
