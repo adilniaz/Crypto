@@ -75,6 +75,12 @@ public class HomophonicCipher implements ICipher{
 		byte[] keyArray = read(key.getAbsolutePath());
 		byte[] encodedArray = read(encoded.getAbsolutePath());
 		
+		List<Byte> encodedList = new ArrayList<Byte>();
+		
+		for (int i = 0; i < encodedArray.length; i++) {
+			encodedList.add(encodedArray[i]);
+		}
+		
 		int index = 0;
 		int incr = 0;
 		int hIndex = 0;
@@ -95,11 +101,31 @@ public class HomophonicCipher implements ICipher{
 			index++;
 		}
 		
-		for (int i = 0; i < encodedArray.length; i++) {
-			System.out.print(encodedArray[i] + " ");
+		index = 0;
+		String messageHolder = "";
+		while (!encodedList.isEmpty()) {
+			for (Byte[] b : decodingMap.keySet()) {
+				if (!encodedList.isEmpty() && b[0] == encodedList.get(0)) {
+					
+					messageHolder += decodingMap.get(b);
+					for (int i = 0; i < b.length; i++) {
+						encodedList.remove(0);
+					}
+				}
+			}
+			index++;
+		}
+		
+		System.out.println(messageHolder);
+	}
+	
+	private void waits() {
+		try {
+		    Thread.sleep(100);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
 		}
 	}
-
 	
 	public byte[] read(String aInputFileName){
 		File file = new File(aInputFileName);
