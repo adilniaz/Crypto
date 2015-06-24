@@ -37,7 +37,7 @@ public class HomophonicCipher implements ICipher{
 		this.weightMap = new HashMap<Character, Integer>();
 		this.encodingMap = new HashMap<Character, Byte[]>();
 		
-		calculateCharacterFrequency(new File("resources/freqCalcFile.txt"));
+		frequencyMap = Application.frequencies;
 		assignWeight();
 		
 		generateKey(key);
@@ -237,42 +237,5 @@ public class HomophonicCipher implements ICipher{
 		}
  
 		return array;
-	}
-
-	public HashMap<Character, Double> calculateCharacterFrequency(File file) {
-		String encodedMessage = fileHandler.readFile(file);
-		
-		for (int i = 0; i < encodedMessage.length(); i++) {
-			char c = encodedMessage.charAt(i);
-			Double val = frequencyMap.get(new Character(c));
-			if (val != null) {
-				frequencyMap.put(c, new Double(val + 1));
-			} else {
-				frequencyMap.put(c, (double) 1);
-			}
-		}
-		
-		for (char c : frequencyMap.keySet()) {
-			frequencyMap.put(c, (frequencyMap.get(c) / encodedMessage.length()) * 100);
-		}
-		String str = "";
-		for (int i = 0; i < Application.HOMONOPHONIC.length(); i++) {
-			if (!frequencyMap.containsKey(Application.HOMONOPHONIC.charAt(i))) {
-				str += Application.HOMONOPHONIC.charAt(i);
-			}
-		}
-		for (int i = 0; i < str.length(); i++) {
-			frequencyMap.put(str.charAt(i), (double) 0);
-		}
-		return frequencyMap;
-	}
-	
-	public String deleteCharacters(String text, String charaters) {
-		for (int i = 0; i < charaters.length(); i++) {
-			text = text.replace(charaters.charAt(i), ' ');
-		}
-		text = text.replaceAll(" ", "");
-		
-		return text;
 	}
 }
