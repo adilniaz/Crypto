@@ -2,10 +2,9 @@ package com.esgi.crypto;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
 public class FrequencyCalculator {
-	File file;
+File file;
 	
 	HashMap<Character, Double> frequencyMap;
 	

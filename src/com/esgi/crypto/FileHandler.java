@@ -1,5 +1,7 @@
 package com.esgi.crypto;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FileHandler {
 	
@@ -99,6 +102,48 @@ public class FileHandler {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
+		}
+		return result;
+	}
+	
+	public void writeByteFile(File file, byte[] byteArray) {
+		BufferedOutputStream bs = null;
+		try {
+		    FileOutputStream fs = new FileOutputStream(file);
+		    bs = new BufferedOutputStream(fs);
+		    bs.write(byteArray);
+		    bs.close();
+		    bs = null;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		if (bs != null) {
+			try { 
+				bs.close(); 
+			} catch (Exception e) {
+				
+			}
+		}
+	}
+	
+	public byte[] readByteFile(String aInputFileName){
+		File file = new File(aInputFileName);
+		byte[] result = new byte[(int)file.length()];
+		InputStream input = null;
+		int totalBytesRead = 0;
+
+		try {
+			input = new BufferedInputStream(new FileInputStream(file));
+			while(totalBytesRead < result.length){
+				int bytesRemaining = result.length - totalBytesRead;
+				int bytesRead = input.read(result, totalBytesRead, bytesRemaining); 
+				if (bytesRead > 0) {
+					totalBytesRead = totalBytesRead + bytesRead;
+				}
+			}
+			input.close();
+		} catch (IOException e) {
+			System.out.print(e);
 		}
 		return result;
 	}
