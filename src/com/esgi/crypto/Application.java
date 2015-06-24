@@ -2,7 +2,7 @@ package com.esgi.crypto;
 
 import java.io.File;
 
-import com.esgi.crypto.cesar.CesarCipher;
+import com.esgi.crypto.homophonique.CypherHomophonique;
 
 public class Application {
 
@@ -22,9 +22,9 @@ public class Application {
 		fileHandler = new FileHandler();
 //		MonoCipher monoCipher = new MonoCipher(fileHandler);
 //		
-		File key = new File(KEY_FILE);
-		File message = new File(MESSAGE_FILE);
-		File encoded = new File(ENCODED_FILE);
+		File keyFile = new File(KEY_FILE);
+		File messageFile = new File(MESSAGE_FILE);
+		File encodedFile = new File(ENCODED_FILE);
 //		
 //		monoCipher.generateKey(key);
 //		monoCipher.encode(message, key, encoded);
@@ -32,9 +32,12 @@ public class Application {
 //		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
 //		m.findKey(encoded, foundKey);
 		
-		CesarCipher cesarCipher = new CesarCipher(fileHandler);
-		cesarCipher.encode(message, key, encoded);
+		//CesarCipher cesarCipher = new CesarCipher(fileHandler);
+		//cesarCipher.encode(message, key, encoded);
 		//cesarCipher.decode(encoded, key, message);
+		CypherHomophonique cypherHomophonique = new CypherHomophonique(fileHandler);
+		//cypherHomophonique.generateKey(key);
+		cypherHomophonique.encode(messageFile, keyFile, encodedFile);
 	}
 	
 	public static void main(String[] args) {
