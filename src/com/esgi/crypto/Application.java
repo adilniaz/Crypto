@@ -2,9 +2,7 @@ package com.esgi.crypto;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
-import com.esgi.crypto.cesar.CesarCipher;
 import com.esgi.crypto.homophonic.HomophonicCipher;
 
 public class Application {
@@ -119,7 +117,6 @@ public class Application {
 //		cesarCipher.decode(encoded, key, message);
 		
 		HomophonicCipher hC = new HomophonicCipher(fileHandler);
-//		hC.generateKey(key);
 //		hC.encode(message, key, encoded);
 		hC.decode(encoded, key, message);
 	}

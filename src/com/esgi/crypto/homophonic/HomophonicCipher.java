@@ -1,14 +1,9 @@
 package com.esgi.crypto.homophonic;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -31,56 +26,74 @@ public class HomophonicCipher implements ICipher{
 		this.fileHandler = fileHandler;
 		this.frequencyMap = new HashMap<Character, Double>();
 		this.weightMap = new HashMap<Character, Integer>();
-		this.decodingMap = new HashMap<Byte[], Character>();
 		this.encodingMap = new HashMap<Character, Byte[]>();
+		this.decodingMap = new HashMap<Byte[], Character>();
 	}
 	
 	@Override
 	public void encode(File message, File key, File encoded) {
+		calculateCharacterFrequency(new File("resources/freqCalcFile.txt"));
+		assignWeight();
+		
+		generateKey(key);
+		
 		String mess = fileHandler.readFile(message);
-		
-		byte[] encodedMessage = encodeMessage(mess);
-		
-		fileHandler.writeByteFile(encoded, encodedMessage);
-	}
-	
-	@Override
-	public void decode(File encoded, File key, File message) {
-		decodingMap = new HashMap<Byte[], Character>();
-		
-		byte[] keyArray = read(key.getAbsolutePath());
-		
-		int index = 0;
-		int incr = 0;
-		int hIndex = 0;
-		while (index < keyArray.length-1) {
-			System.out.println(index + " " + );
-			if (hIndex<Application.HOMONOPHONIC.length()) {
-				
-				incr = keyArray[index];
-				int indTmp = index;
-				int arrIndex = 0;
-				Byte[] tmpArr = new Byte[incr];
-				for (int i = index+1; i <= incr+indTmp; i++) {
-					tmpArr[arrIndex] = keyArray[i];
-					index++;
-					arrIndex++;
-				}
-				char ch = Application.HOMONOPHONIC.charAt(hIndex);
-				decodingMap.put(tmpArr, ch);
-				
-				hIndex++;
-				index++;
+		List<Byte> byteList = new ArrayList<Byte>();
+		for (int i = 0; i < mess.length(); i++) {
+			Byte[] bA =  encodingMap.get(mess.charAt(i));
+			for (int j = 0; j < bA.length; j++) {
+				byteList.add(bA[j]);
 			}
 		}
+		
+		byte[] byteArray = new byte[byteList.size()];
+		for (int i = 0; i < byteArray.length; i++) {
+			byteArray[i] = byteList.get(i);
+		}
+		
+		fileHandler.writeByteFile(encoded, byteArray);
+	}
+	
+	private void assignWeight() {
+		for (Character c : frequencyMap.keySet()) {
+			int val = (int) ((frequencyMap.get(c)*12+6)/25)+1;
+			values += val;
+			weightMap.put(c, val);
+		}
+	}
 
-		byte[] encodedArray = read(encoded.getAbsolutePath());
+	@Override
+	public void decode(File encoded, File key, File message) {
+		byte[] keyArray = fileHandler.readByteFile(key.getAbsolutePath());
+
+		byte[] encodedArray = fileHandler.readByteFile(encoded.getAbsolutePath());
 		
 		List<Byte> encodedList = new ArrayList<Byte>();
 		
 		for (int i = 0; i < encodedArray.length; i++) {
 			encodedList.add(encodedArray[i]);
 		}
+		
+		int index = 0;
+		int incr = 0;
+		int hIndex = 0;
+		while (index < keyArray.length-1) {
+			incr = keyArray[index];
+			int indTmp = index;
+			int arrIndex = 0;
+			Byte[] tmpArr = new Byte[incr];
+			for (int i = index+1; i <= incr+indTmp; i++) {
+				tmpArr[arrIndex] = keyArray[i];
+				index++;
+				arrIndex++;
+			}
+			char ch = Application.HOMONOPHONIC.charAt(hIndex);
+			decodingMap.put(tmpArr, ch);
+			
+			hIndex++;
+			index++;
+		}
+		
 		index = 0;
 		String messageHolder = "";
 		while (!encodedList.isEmpty()) {
@@ -98,85 +111,55 @@ public class HomophonicCipher implements ICipher{
 		
 		fileHandler.writeFile(message, messageHolder);
 	}
-
-	private byte[] encodeMessage(String mess) {
-		List<Byte> byteList = new ArrayList<Byte>();
-		for (int i = 0; i < mess.length(); i++) {
-			Byte[] bA =  encodingMap.get(mess.charAt(i));
-			for (int j = 0; j < bA.length; j++) {
-				byteList.add(bA[j]);
-			}
-		}
-		
-		byte[] byteArray = new byte[byteList.size()];
-		for (int i = 0; i < byteArray.length; i++) {
-			byteArray[i] = byteList.get(i);
-		}
-		return byteArray;
-	}
-	
-	public byte[] read(String aInputFileName){
-		File file = new File(aInputFileName);
-		byte[] result = new byte[(int)file.length()];
-		InputStream input = null;
-		int totalBytesRead = 0;
-
-		try {
-			input = new BufferedInputStream(new FileInputStream(file));
-			while(totalBytesRead < result.length){
-				int bytesRemaining = result.length - totalBytesRead;
-				int bytesRead = input.read(result, totalBytesRead, bytesRemaining); 
-				if (bytesRead > 0) {
-					totalBytesRead = totalBytesRead + bytesRead;
-				}
-			}
-			input.close();
-		} catch (IOException e) {
-			System.out.print(e);
-		}
-		return result;
-	}
 	
 	@Override
 	public void generateKey(File key) {
-		frequencyMap = Application.frequencies;
-		assignWeight();
-		
 		byte[] byte_array = new byte[values];
 		
 		for (int i = 0; i < byte_array.length; i++) {
 			byte_array[i] = new Byte((byte) i);
 		}
-	    
-	    byte[] _key = createKey();
-	    
+		
 		RandomizeArray(byte_array);
 		byteAssociation(byte_array);
-		fileHandler.writeByteFile(key, _key);
-	}
-
-	private byte[] createKey() {
-		byte[] keyTmp = new byte[values + encodingMap.size()+1];
-	    int keyIndex = 0;
-	    for (Character c : encodingMap.keySet()) {
-	    	keyTmp[keyIndex] = (byte) encodingMap.get(c).length;
-	    	keyIndex++;
-	    	for (int i = 0; i < encodingMap.get(c).length; i++) {
-	    		keyTmp[keyIndex] = encodingMap.get(c)[i];
-		    	keyIndex++;
-			}
-		}
-	    keyTmp[keyTmp.length-1] = '\0';
-		return keyTmp;
+		writeKey(key);
 	}
 	
-	private void assignWeight() {
-		for (Character c : frequencyMap.keySet()) {
-			int val = (int) ((frequencyMap.get(c)*12+6)/25)+1;
-			values += val;
-			weightMap.put(c, val);
+	private void writeKey(File file) {
+		BufferedOutputStream bs = null;
+		try {
+		    FileOutputStream fs = new FileOutputStream(file);
+		    
+		    bs = new BufferedOutputStream(fs);
+		    
+		    byte[] keyTmp = new byte[values + encodingMap.size()+1];
+		    int keyIndex = 0;
+		    for (Character c : encodingMap.keySet()) {
+		    	keyTmp[keyIndex] = (byte) encodingMap.get(c).length;
+		    	keyIndex++;
+		    	for (int i = 0; i < encodingMap.get(c).length; i++) {
+		    		keyTmp[keyIndex] = encodingMap.get(c)[i];
+			    	keyIndex++;
+				}
+			}
+		    keyTmp[keyTmp.length-1] = '\0';
+		    bs.write(keyTmp);
+		    bs.close();
+		    bs = null;
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		if (bs != null) {
+			try { 
+				bs.close(); 
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 		}
 	}
+	
 
 	private void byteAssociation(byte[] byte_array) {
 		int start = 0, end = 0;
@@ -204,5 +187,42 @@ public class HomophonicCipher implements ICipher{
 		}
  
 		return array;
+	}
+
+	public HashMap<Character, Double> calculateCharacterFrequency(File file) {
+		String encodedMessage = fileHandler.readFile(file);
+		
+		for (int i = 0; i < encodedMessage.length(); i++) {
+			char c = encodedMessage.charAt(i);
+			Double val = frequencyMap.get(new Character(c));
+			if (val != null) {
+				frequencyMap.put(c, new Double(val + 1));
+			} else {
+				frequencyMap.put(c, (double) 1);
+			}
+		}
+		
+		for (char c : frequencyMap.keySet()) {
+			frequencyMap.put(c, (frequencyMap.get(c) / encodedMessage.length()) * 100);
+		}
+		String str = "";
+		for (int i = 0; i < Application.HOMONOPHONIC.length(); i++) {
+			if (!frequencyMap.containsKey(Application.HOMONOPHONIC.charAt(i))) {
+				str += Application.HOMONOPHONIC.charAt(i);
+			}
+		}
+		for (int i = 0; i < str.length(); i++) {
+			frequencyMap.put(str.charAt(i), (double) 0);
+		}
+		return frequencyMap;
+	}
+	
+	public String deleteCharacters(String text, String charaters) {
+		for (int i = 0; i < charaters.length(); i++) {
+			text = text.replace(charaters.charAt(i), ' ');
+		}
+		text = text.replaceAll(" ", "");
+		
+		return text;
 	}
 }
