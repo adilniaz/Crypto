@@ -115,6 +115,8 @@ public class HomophonicCipher implements ICipher{
 			index++;
 		}
 		
+		fileHandler.writeFile(message, messageHolder);
+		
 		System.out.println(messageHolder);
 	}
 	
