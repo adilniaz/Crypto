@@ -2,9 +2,7 @@ package com.esgi.crypto;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
-import com.esgi.crypto.cesar.CesarCipher;
 import com.esgi.crypto.homophonic.HomophonicCipher;
 
 public class Application {
@@ -104,8 +102,8 @@ public class Application {
 		File message = new File(MESSAGE_FILE);
 		File encoded = new File(ENCODED_FILE);
 		
-		FrequencyCalculator fC = new FrequencyCalculator();
-		fC.calculateCharacterFrequency();
+//		FrequencyCalculator fC = new FrequencyCalculator();
+//		fC.calculateCharacterFrequency();
 		
 		
 //		monoCipher.generateKey(key);
