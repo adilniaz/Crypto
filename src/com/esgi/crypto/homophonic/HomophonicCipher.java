@@ -10,6 +10,7 @@ import java.util.Random;
 
 import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
+import com.esgi.crypto.FrequencyCalculator;
 import com.esgi.crypto.ICipher;
 
 public class HomophonicCipher implements ICipher{
@@ -28,12 +29,11 @@ public class HomophonicCipher implements ICipher{
 		this.weightMap = new HashMap<Character, Integer>();
 		this.encodingMap = new HashMap<Character, Byte[]>();
 		this.decodingMap = new HashMap<Byte[], Character>();
+		this.frequencyMap = Application.frequencies;
 	}
 	
 	@Override
 	public void encode(File message, File key, File encoded) {
-		calculateCharacterFrequency(new File("resources/freqCalcFile.txt"));
-		assignWeight();
 		
 		generateKey(key);
 		
@@ -87,7 +87,7 @@ public class HomophonicCipher implements ICipher{
 				index++;
 				arrIndex++;
 			}
-			char ch = Application.HOMONOPHONIC.charAt(hIndex);
+			char ch = Application.ALPHABET.charAt(hIndex);
 			decodingMap.put(tmpArr, ch);
 			
 			hIndex++;
@@ -114,6 +114,7 @@ public class HomophonicCipher implements ICipher{
 	
 	@Override
 	public void generateKey(File key) {
+		assignWeight();
 		byte[] byte_array = new byte[values];
 		
 		for (int i = 0; i < byte_array.length; i++) {
@@ -206,9 +207,9 @@ public class HomophonicCipher implements ICipher{
 			frequencyMap.put(c, (frequencyMap.get(c) / encodedMessage.length()) * 100);
 		}
 		String str = "";
-		for (int i = 0; i < Application.HOMONOPHONIC.length(); i++) {
-			if (!frequencyMap.containsKey(Application.HOMONOPHONIC.charAt(i))) {
-				str += Application.HOMONOPHONIC.charAt(i);
+		for (int i = 0; i < Application.ALPHABET.length(); i++) {
+			if (!frequencyMap.containsKey(Application.ALPHABET.charAt(i))) {
+				str += Application.ALPHABET.charAt(i);
 			}
 		}
 		for (int i = 0; i < str.length(); i++) {

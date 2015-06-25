@@ -1,4 +1,4 @@
-package com.esgi.crypto;
+package com.esgi.crypto.monocipher;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,6 +7,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+
+import com.esgi.crypto.Application;
+import com.esgi.crypto.FileHandler;
+import com.esgi.crypto.ICipher;
 
 public class MonoCipher implements ICipher {
 	

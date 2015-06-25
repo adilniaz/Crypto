@@ -1,4 +1,4 @@
-package com.esgi.crypto.monoattack;
+package com.esgi.crypto.monocipher;
 
 import java.io.File;
 import java.util.ArrayList;
