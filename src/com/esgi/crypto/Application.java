@@ -3,7 +3,7 @@ package com.esgi.crypto;
 import java.io.File;
 import java.util.HashMap;
 
-import com.esgi.crypto.homophonic.HomophonicCipher;
+import com.esgi.cipher.VigenereCipher;
 
 public class Application {
 
@@ -116,9 +116,12 @@ public class Application {
 //		cesarCipher.encode(message, key, encoded);
 //		cesarCipher.decode(encoded, key, message);
 		
-		HomophonicCipher hC = new HomophonicCipher(fileHandler);
+//		HomophonicCipher hC = new HomophonicCipher(fileHandler);
 //		hC.encode(message, key, encoded);
-		hC.decode(encoded, key, message);
+//		hC.decode(encoded, key, message);
+		
+		VigenereCipher vigenereCipher = new VigenereCipher();
+		vigenereCipher.generateKey(key);
 	}
 	
 	public static void main(String[] args) {
