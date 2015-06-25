@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
 import com.esgi.crypto.ICipher;
 
 public class PolyAlphaSubstitution implements ICipher{
 	private FileHandler fileHandler;
 	
-	public String array = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public String array = Application.ALPHABET;
 	public List<String> swappers;
 	
 	public PolyAlphaSubstitution(FileHandler fileHandler) {
@@ -28,7 +29,8 @@ public class PolyAlphaSubstitution implements ICipher{
 	public void encode(File message, File key, File encoded) {
 		String mess = fileHandler.readFile(message);
 		String _key = fileHandler.readFile(key);
-		
+		if(_key=="")
+			_key = " ";
 		generator(_key);
 		
 		String codedMessage = swap(mess, true);
@@ -40,6 +42,8 @@ public class PolyAlphaSubstitution implements ICipher{
 	public void decode(File encoded, File key, File message) {
 		String code = fileHandler.readFile(encoded);
 		String _key = fileHandler.readFile(key);
+		if(_key=="")
+			_key = " ";
 		
 		generator(_key);
 		
@@ -75,7 +79,7 @@ public class PolyAlphaSubstitution implements ICipher{
 			int i;
 			String swapper = "";
 			while (index < size) {
-				i = (keyIndex+index)%26;
+				i = (keyIndex+index)%size;
 				swapper += array.charAt(i);
 				index++;
 			}

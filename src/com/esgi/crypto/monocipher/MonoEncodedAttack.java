@@ -1,10 +1,13 @@
-package com.esgi.crypto;
+package com.esgi.crypto.monocipher;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.esgi.crypto.Application;
+import com.esgi.crypto.FileHandler;
 
 public class MonoEncodedAttack {
 	
