@@ -3,7 +3,9 @@ package com.esgi.crypto;
 import java.io.File;
 import java.util.HashMap;
 
-import com.esgi.crypto.homophonic.HomophonicCipher;
+import com.esgi.crypto.caesar.CaesarCipher;
+import com.esgi.crypto.polyalphasubs.PolyAlphaSubstitution;
+
 
 public class Application {
 
@@ -15,7 +17,7 @@ public class Application {
 	public static final String ROMAN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String PONCTUATION = " _.,;:\"'";
 	
-	public static final String HOMONOPHONIC = " !\"'(),-./0123456789:;<=>?@ÀABÂCDEFGÇHÈIÉÊJKËLMNÎOÏPQRŒSTÔUVWXYÙZÛ_`";
+	public static final String ALPHABET = " !\"'(),-./0123456789:;<=>?@ÀABÂCDEFGÇHÈIÉÊJKËLMNÎOÏPQRŒSTÔUVWXYÙZÛ_`";
 	
 	public static final String KEY_BASE = ROMAN_ALPHABET/* + PONCTUATION*/;
 	
@@ -112,13 +114,20 @@ public class Application {
 //		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
 //		m.findKey(encoded, foundKey);
 		
-//		CesarCipher cesarCipher = new CesarCipher(fileHandler);
-//		cesarCipher.encode(message, key, encoded);
-//		cesarCipher.decode(encoded, key, message);
+//		CaesarCipher cC = new CaesarCipher(fileHandler);
+//		cC.generateKey(key);
+//		cC.encode(message, key, encoded);
+//		cC.decode(encoded, key, message);
 		
-		HomophonicCipher hC = new HomophonicCipher(fileHandler);
+//		HomophonicCipher hC = new HomophonicCipher(fileHandler);
 //		hC.encode(message, key, encoded);
-		hC.decode(encoded, key, message);
+//		hC.decode(encoded, key, message);
+		
+		PolyAlphaSubstitution mC = new PolyAlphaSubstitution(fileHandler);
+//		mC.generateKey(key);
+//		mC.encode(message, key, encoded);
+//		mC.decode(encoded, key, message);
+		
 	}
 	
 	public static void main(String[] args) {

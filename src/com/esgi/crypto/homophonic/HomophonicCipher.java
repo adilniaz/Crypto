@@ -87,7 +87,7 @@ public class HomophonicCipher implements ICipher{
 				index++;
 				arrIndex++;
 			}
-			char ch = Application.HOMONOPHONIC.charAt(hIndex);
+			char ch = Application.ALPHABET.charAt(hIndex);
 			decodingMap.put(tmpArr, ch);
 			
 			hIndex++;
@@ -207,9 +207,9 @@ public class HomophonicCipher implements ICipher{
 			frequencyMap.put(c, (frequencyMap.get(c) / encodedMessage.length()) * 100);
 		}
 		String str = "";
-		for (int i = 0; i < Application.HOMONOPHONIC.length(); i++) {
-			if (!frequencyMap.containsKey(Application.HOMONOPHONIC.charAt(i))) {
-				str += Application.HOMONOPHONIC.charAt(i);
+		for (int i = 0; i < Application.ALPHABET.length(); i++) {
+			if (!frequencyMap.containsKey(Application.ALPHABET.charAt(i))) {
+				str += Application.ALPHABET.charAt(i);
 			}
 		}
 		for (int i = 0; i < str.length(); i++) {
