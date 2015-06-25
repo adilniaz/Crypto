@@ -13,6 +13,7 @@ import com.esgi.crypto.FileHandler;
 public class VigenereAttack {
 	
 	private FileHandler handler;
+	public static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public static int [] wordsLength = {3, 4};
 	
@@ -20,7 +21,7 @@ public class VigenereAttack {
 		this.handler = handler;
 	}
 	
-	public void attack (File encoded, File decripted) {
+	public void attack (File encoded, File keyFile, File decripted) {
 		/* On lit le fichier dans une chaine */
 		
 		String text = this.handler.readFile(encoded);
@@ -37,9 +38,12 @@ public class VigenereAttack {
 		
 		int keySize = this.maxKeySize(possibleKeys);
 		System.out.println("max : " + keySize);
-		this.findFrequence(keySize, map, text);
-		
-		/* On remplace les fréquence par les mots probable */
+		String key = this.findProblableKey(keySize, map, text);
+		/* On décode avec la clé trouvé */
+
+		this.handler.writeFile(keyFile, key);
+		PolyAlphaSubstitution substitution = new PolyAlphaSubstitution(handler);
+		substitution.decode(encoded, keyFile, decripted);
 	}
 	
 	private Map<String, Map<String, Integer>> findRepetition (int [] wordsLength, String text) {
@@ -150,6 +154,17 @@ public class VigenereAttack {
 			}
 		}
 		return key;
+	}
+	
+	private String findProblableKey (int keySize, Map<String, Map<String, Integer>> map, String text) {
+		StringBuilder keyBuilder = new StringBuilder(keySize);
+		for (int i = 0 ; i < keySize ; i++) {
+			for (int j = 0 ; j < ALPHABET.length() ; j++) {
+				char character = ALPHABET.charAt(j);
+				
+			}
+		}
+		return keyBuilder.toString();
 	}
 	
 	private Map<Character, Double> findFrequence (int keySize, Map<String, Map<String, Integer>> map, String text) {
