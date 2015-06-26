@@ -3,8 +3,8 @@ package com.esgi.cipher;
 import java.io.File;
 import java.util.Random;
 
-import com.esgi.crypto.Application;
-import com.esgi.crypto.ICipher;
+import org.esgi.crypto.Application;
+import org.esgi.crypto.ICipher;
 
 public class VigenereCipher implements ICipher {
 
