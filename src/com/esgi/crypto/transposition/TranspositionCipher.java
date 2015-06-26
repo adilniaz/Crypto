@@ -29,11 +29,11 @@ public class TranspositionCipher implements ICipher{
 	}
 
 	@Override
-	public void generateKey(File key) {
+	public void generateKey(File keyFile) {
 		int keySize = randomKeySize();
 		System.out.println("keySize : " + keySize + "\n");
-		byte[] _key = RandomKeyGenerator(keySize);
-		fileHandler.writeByteFile(key, _key);
+		byte[] key = RandomKeyGenerator(keySize);
+		fileHandler.writeByteFile(keyFile, key);
 	}
 
 
@@ -74,17 +74,18 @@ public class TranspositionCipher implements ICipher{
 	}
 
 	@Override
-	public void encode(File message, File key, File encoded) {
-		String mess = fileHandler.readFile(message);
-		byte[] _key = fileHandler.readByteFile(key.getPath());
-		mess = rectifyCodedMessage(mess, _key);
+	public void encode(File messageFile, File keyFile, File encodedFile) {
+		String message = fileHandler.readFile(messageFile);
+		byte[] key = fileHandler.readByteFile(keyFile.getPath());
+		
+		message = addFillingSpace(message, key);
 		
 		ArrayList<String> blocList = new ArrayList<String>();
-		blocList = messageToBlocks(mess, _key);
+		blocList = messageToBlocks(message, key);
 		
 		System.out.println("KEY");
-		for (int i = 0; i < _key.length; i++) {
-			System.out.print(_key[i] + " ");
+		for (int i = 0; i < key.length; i++) {
+			System.out.print(key[i] + " ");
 		}
 		System.out.println("\nKEY");
 		
@@ -93,19 +94,19 @@ public class TranspositionCipher implements ICipher{
 
 		String codedMessage = "";
 		for (String b : blocList) {
-			codedMessage += shuffleByKey(b, _key);
+			codedMessage += shuffleByKey(b, key);
 		}
 		
-		fileHandler.writeFile(encoded, codedMessage);
+		fileHandler.writeFile(encodedFile, codedMessage);
 	}
 
 
-	private String shuffleByKey(String bloc, byte[] _key) {
+	private String shuffleByKey(String bloc, byte[] key) {
 		char[] tmp = bloc.toCharArray();
 		String[] res = new String[bloc.length()];
-		for (int i = 0; i < _key.length; i++) {
+		for (int i = 0; i < key.length; i++) {
 			res[i] = "";
-			res[i] += tmp[_key[i]];
+			res[i] += tmp[key[i]];
 		}
 		String result = "";
 		for (int i = 0; i < res.length; i++) {
@@ -115,9 +116,9 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private String rectifyCodedMessage(String coded, byte[] _key) {
-		if (coded.length()%_key.length != 0) {
-			int spacesToAdd = _key.length - coded.length()%_key.length;
+	private String addFillingSpace(String coded, byte[] key) {
+		if (coded.length() % key.length != 0) {
+			int spacesToAdd = key.length - coded.length() % key.length;
 			for (int i = 0; i < spacesToAdd; i++) {
 				coded += " ";
 			}
@@ -126,23 +127,23 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private ArrayList<String> messageToBlocks(String coded, byte[] _key) {
+	private ArrayList<String> messageToBlocks(String message, byte[] key) {
 		String tmpString = "";
-		ArrayList<String> blocList = new ArrayList<String>();
-		for (int i = 0; i < coded.length(); i++) {
-			tmpString += coded.charAt(i);
-			if (i>0 && (i+1)%_key.length == 0) {
-				blocList.add(tmpString);
+		ArrayList<String> blockList = new ArrayList<String>();
+		for (int i = 0; i < message.length(); i++) {
+			tmpString += message.charAt(i);
+			if (i > 0 && (i + 1) % key.length == 0) {
+				blockList.add(tmpString);
 				tmpString = "";
 			}
 		}
-		return blocList;
+		return blockList;
 	}
 
 	@Override
-	public void decode(File encoded, File key, File message) {
-		String code = fileHandler.readFile(encoded);
-		String _key = fileHandler.readFile(key);
+	public void decode(File encodedFile, File keyFile, File messageFile) {
+		String code = fileHandler.readFile(encodedFile);
+		String key = fileHandler.readFile(keyFile);
 		
 	}
 
