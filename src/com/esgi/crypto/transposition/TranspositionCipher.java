@@ -96,8 +96,7 @@ public class TranspositionCipher implements ICipher{
 			codedMessage += shuffleByKey(b, _key);
 		}
 		
-		
-		System.out.println(codedMessage);
+		fileHandler.writeFile(encoded, codedMessage);
 	}
 
 
