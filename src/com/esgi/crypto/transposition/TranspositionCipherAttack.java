@@ -3,6 +3,8 @@ package com.esgi.crypto.transposition;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
@@ -79,8 +81,8 @@ public class TranspositionCipherAttack {
 		wordFound = comparison(character);
 		System.out.println(wordFound.size());
 		
-		string = comparisonList(string, wordFound);
-		System.out.println(string);
+		List<String> founds = comparisonList(string, wordFound);
+		System.out.println(founds);
 	}
 
 	private void loadDictionnary() {
@@ -98,8 +100,8 @@ public class TranspositionCipherAttack {
 		return wordFound;
 	}
 
-	private String comparisonList(String string, ArrayList<String> wF) {
-		String result = "";
+	private List<String> comparisonList(String string, ArrayList<String> wF) {
+		/*String result = "";
 		System.out.println("////" + string);
 		for (Character c : string.toCharArray()) {
 				System.out.println("////" + c);
@@ -110,7 +112,29 @@ public class TranspositionCipherAttack {
 				}
 			}
 		}
-		return result;
+		return result;*/
+		
+		List<String> results = new ArrayList<>();
+		for (String word : wF) {
+			int nbFound = 0;
+			Map<Character, Integer> indexes = new HashMap<>();
+			for (Character c : string.toCharArray()) {
+				int index = 0;
+				if (indexes.containsKey(c)) {
+					index = indexes.get(c);
+				}
+				int foundIndex = word.indexOf(c, index);
+				if (foundIndex != -1) {
+					nbFound++;
+					index = foundIndex;
+				}
+			}
+			if (nbFound == word.length()) {
+				results.add(word);
+				System.out.println("////" + word);
+			}
+		}
+		return results;
 	}
 
 	private ArrayList<Integer> findFactors(int number) {
