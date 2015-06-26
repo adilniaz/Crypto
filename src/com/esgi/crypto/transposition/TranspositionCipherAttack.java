@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.omg.PortableInterceptor.INACTIVE;
-
 import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
 
@@ -16,6 +14,8 @@ public class TranspositionCipherAttack {
 	ArrayList<String> dict;
 	HashMap<Character, Integer> frequencyMap;
 	int mostUsedFrequency;
+	
+	String alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public TranspositionCipherAttack(FileHandler fileHandler) {
 		this.mostUsedFrequency = 0;
@@ -40,9 +40,13 @@ public class TranspositionCipherAttack {
 				while(!leastUsedCharacters.isEmpty()) {
 					leastUsedCharacters.remove(0);
 				}
-				leastUsedCharacters.add(c);
+				if (alphabets.contains(c+"")) {
+					leastUsedCharacters.add(c);
+				}
 			} else if (value == min) {
-				leastUsedCharacters.add(c);
+				if (alphabets.contains(c+"")) {
+					leastUsedCharacters.add(c);
+				}
 			}
 		}
 		System.out.println(leastUsedCharacters);
@@ -50,12 +54,33 @@ public class TranspositionCipherAttack {
 		factors = findFactors(coded.length());
 		factors.add(coded.length());
 		
+		
+		
+		
 		System.out.println(factors + " ");
 		loadDictionnary();
+		
 		for (Character character : leastUsedCharacters) {
-			comparison(character);
+			for (int i = 0; i < coded.length(); i++) {
+				if (character == coded.charAt(i)) {
+					possibleWords(coded, coded.indexOf(character), character);
+				}
+			}
 		}
 		
+		
+	}
+
+	private void possibleWords(String coded, int index, Character character) {
+		ArrayList<String> wordFound;
+		System.out.println(character + " : " + coded.indexOf(character));
+		
+		String string = coded.substring(index-20, index+21);
+		wordFound = comparison(character);
+		System.out.println(wordFound.size());
+		
+		string = comparisonList(string, wordFound);
+		System.out.println(string);
 	}
 
 	private void loadDictionnary() {
@@ -63,14 +88,29 @@ public class TranspositionCipherAttack {
 		dict = fH.readFileToList(d);
 	}
 
-	private void comparison(Character character) {
+	private ArrayList<String> comparison(Character character) {
 		ArrayList<String> wordFound = new ArrayList<String>();
 		for (String word : dict) {
 			if (word.contains(character+"")) {
 				wordFound.add(word);
 			}
 		}
-		System.out.println(wordFound.size());
+		return wordFound;
+	}
+
+	private String comparisonList(String string, ArrayList<String> wF) {
+		String result = "";
+		System.out.println("////" + string);
+		for (Character c : string.toCharArray()) {
+				System.out.println("////" + c);
+			for (String word : wF) {
+				if (word.contains(c+"")) {
+					result += c;
+					System.out.println(result);
+				}
+			}
+		}
+		return result;
 	}
 
 	private ArrayList<Integer> findFactors(int number) {
