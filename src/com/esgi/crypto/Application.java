@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import com.esgi.crypto.transposition.TranspositionCipher;
+import com.esgi.crypto.transposition.TranspositionCipherAttack;
 
 
 public class Application {
@@ -111,9 +112,13 @@ public class Application {
 //		vA.attack(encoded, message);
 		
 		TranspositionCipher tC = new TranspositionCipher(fileHandler, messageFile);
-		tC.generateKey(keyFile);
-		tC.encode(messageFile, keyFile, encodedFile);
-		//tC.decode(encodedFile, keyFile, messageFile);
+//		tC.generateKey(keyFile);
+//		tC.encode(messageFile, keyFile, encodedFile);
+//		tC.decode(encodedFile, keyFile, messageFile);
+		
+		TranspositionCipherAttack tA = new TranspositionCipherAttack(fileHandler);
+		tA.attack();
+		
 	}
 	
 	public static void main(String[] args) {

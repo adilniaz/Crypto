@@ -29,6 +29,7 @@ public class TranspositionCipherAttack {
 			if (i < 10) {
 				System.out.println(i + " - start :");
 				list = new ArrayList<String>();
+				System.out.println(list);
 				permutation(coded.substring(0, i));
 				comparison();
 				System.out.println(i + " - end");
