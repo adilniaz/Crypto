@@ -10,9 +10,7 @@ File file;
 	
 	FileHandler fileHandler;
 	
-	
-	
-	public FrequencyCalculator() {
+	public FrequencyCalculator(File file) {
 		this.fileHandler = new FileHandler();
 		this.frequencyMap = new HashMap<Character, Double>();
 		file = new File("resources/freqCalcFile.txt");
