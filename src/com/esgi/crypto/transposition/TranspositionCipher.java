@@ -49,7 +49,7 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private byte[] RandomKeyGenerator(int keySize) {
+	private byte[] randomKeyGenerator(int keySize) {
 		byte[] array = new byte[keySize];
 		
 		for (int i = 0; i < array.length; i++) {
@@ -60,7 +60,7 @@ public class TranspositionCipher implements ICipher{
 		return array;
 	}
 	
-	public byte[] RandomizeArray(byte[] array){
+	private byte[] randomizeArray(byte[] array){
 		Random rgen = new Random();	
  
 		for (int i=0; i<array.length; i++) {
@@ -80,30 +80,59 @@ public class TranspositionCipher implements ICipher{
 		
 		message = addFillingSpace(message, key);
 		
-		ArrayList<String> blocList = new ArrayList<String>();
-		blocList = messageToBlocks(message, key);
+        blockList = messageToBlocks(message, key);
 		
 		System.out.println("KEY");
 		for (int i = 0; i < key.length; i++) {
 			System.out.print(key[i] + " ");
-		}
-		System.out.println("\nKEY");
-		
-		
-		System.out.println(blocList);
+        }
+		blockList = messageToBlocks(mess, _key);
 
+		
 		String codedMessage = "";
 		for (String b : blocList) {
-			codedMessage += shuffleByKey(b, key);
+			codedMessage += encodeShuffle(b, _key);
+		}
+		
+//		System.out.println("/ : " + codedMessage);
+		fileHandler.writeFile(encoded, codedMessage);
+	}
+
+	@Override
+	public void decode(File encodedFile, File keyFile, File messageFile) {
+		String coded = fileHandler.readFile(encoded);
+		byte[] key = fileHandler.readByteFile(key.getPath());
+
+		blockList = messageToBlocks(coded, key);
+		decodeShuffle(coded, key);
+		
+		String decodedMessage = "";
+		for (String blockText : blockList) {
+			codedMessage += shuffleByKey(blockText, key);
 		}
 		
 		fileHandler.writeFile(encodedFile, codedMessage);
 	}
 
-
-	private String shuffleByKey(String bloc, byte[] key) {
+	private String decodeShuffle(String bloc, byte[] _key) {
 		char[] tmp = bloc.toCharArray();
 		String[] res = new String[bloc.length()];
+		for (int i = 0; i < _key.length; i++) {
+			res[_key[i]] = "";
+			res[_key[i]] += tmp[i];
+		}
+		String result = "";
+		for (int i = 0; i < res.length; i++) {
+			result += res[i];
+		}
+//		System.out.println(result.substring(0, _key.length));
+		return result.substring(0, _key.length);
+	}
+
+
+	private String encodeShuffle(String blockText, byte[] key) {
+		char[] tmp = bloc.toCharArray();
+		String[] res = new String[blockText.length()];
 		for (int i = 0; i < key.length; i++) {
 			res[i] = "";
 			res[i] += tmp[key[i]];
@@ -146,5 +175,4 @@ public class TranspositionCipher implements ICipher{
 		String key = fileHandler.readFile(keyFile);
 		
 	}
-
 }
