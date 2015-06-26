@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class FileHandler {
 	
@@ -93,6 +94,27 @@ public class FileHandler {
 			br = new BufferedReader(new FileReader(file));
 			while ((sCurrentLine = br.readLine()) != null) {
 				result += sCurrentLine;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null) br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public ArrayList<String> readFileToList(File file) {
+		BufferedReader br = null;
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+			String sCurrentLine;
+			br = new BufferedReader(new FileReader(file));
+			while ((sCurrentLine = br.readLine()) != null) {
+				result.add(sCurrentLine);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
