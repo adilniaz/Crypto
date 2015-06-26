@@ -24,6 +24,14 @@ public class AttackTransposition implements IExecute {
 		this.dict = new ArrayList<String>();
 	}
 	
+	public AttackTransposition() {
+		this.mostUsedFrequency = 0;
+		this.fH = new FileHandler();
+		this.frequencyMap = new HashMap<>();
+		this.list = new ArrayList<String>();
+		this.dict = new ArrayList<String>();
+	}
+	
 	@Override
 	public void execute (File encoded, File key, File decoded) {
 		String coded = fH.readFile(encoded);
