@@ -10,7 +10,6 @@ import java.util.Random;
 
 import com.esgi.crypto.Application;
 import com.esgi.crypto.FileHandler;
-import com.esgi.crypto.FrequencyCalculator;
 import com.esgi.crypto.ICipher;
 
 public class HomophonicCipher implements ICipher{

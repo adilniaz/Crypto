@@ -3,8 +3,7 @@ package com.esgi.crypto;
 import java.io.File;
 import java.util.HashMap;
 
-import com.esgi.crypto.caesar.CaesarCipher;
-import com.esgi.crypto.polyalphasubs.PolyAlphaSubstitution;
+import com.esgi.crypto.transposition.TranspositionCipher;
 
 
 public class Application {
@@ -98,36 +97,23 @@ public class Application {
 	
 	public Application() {
 		fileHandler = new FileHandler();
-//		MonoCipher monoCipher = new MonoCipher(fileHandler);
 //		
-		File key = new File(KEY_FILE);
-		File message = new File(MESSAGE_FILE);
-		File encoded = new File(ENCODED_FILE);
+		File keyFile = new File(KEY_FILE);
+		File messageFile = new File(MESSAGE_FILE);
+		File encodedFile = new File(ENCODED_FILE);
 		
-//		FrequencyCalculator fC = new FrequencyCalculator();
-//		fC.calculateCharacterFrequency();
-		
-		
-//		monoCipher.generateKey(key);
-//		monoCipher.encode(message, key, encoded);
-//		
-//		MonoEncodedAttack m = new MonoEncodedAttack(fileHandler);
-//		m.findKey(encoded, foundKey);
-		
-//		CaesarCipher cC = new CaesarCipher(fileHandler);
-//		cC.generateKey(key);
-//		cC.encode(message, key, encoded);
-//		cC.decode(encoded, key, message);
-		
-//		HomophonicCipher hC = new HomophonicCipher(fileHandler);
-//		hC.encode(message, key, encoded);
-//		hC.decode(encoded, key, message);
-		
-		PolyAlphaSubstitution mC = new PolyAlphaSubstitution(fileHandler);
+//		PolyAlphaSubstitution mC = new PolyAlphaSubstitution(fileHandler);
 //		mC.generateKey(key);
 //		mC.encode(message, key, encoded);
 //		mC.decode(encoded, key, message);
 		
+//		VigenereAttack vA = new VigenereAttack(fileHandler);
+//		vA.attack(encoded, message);
+		
+		
+		TranspositionCipher tC = new TranspositionCipher(fileHandler, messageFile);
+//		tC.generateKey(key);
+		tC.encode(messageFile, keyFile, encodedFile);
 	}
 	
 	public static void main(String[] args) {
