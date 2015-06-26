@@ -10,37 +10,38 @@ import com.esgi.crypto.ICipher;
 public class TranspositionCipher implements ICipher{
 	
 	FileHandler fileHandler;
-	File message;
+	File messageFile;
 	
 	public TranspositionCipher() {
 		this.fileHandler = new FileHandler();
-		this.message = null;
+		this.messageFile = null;
 	}
 	
 	
 	public TranspositionCipher(FileHandler fileHandler) {
 		this.fileHandler = fileHandler;
-		this.message = null;
+		this.messageFile = null;
 	}
 	
-	public TranspositionCipher(FileHandler fileHandler, File message) {
+	public TranspositionCipher(FileHandler fileHandler, File messageFile) {
 		this.fileHandler = fileHandler;
-		this.message = message;
+		this.messageFile = messageFile;
 	}
 
 	@Override
-	public void generateKey(File key) {
+	public void generateKey(File keyFile) {
 		int keySize = randomKeySize();
 		System.out.println("keySize : " + keySize + "\n");
-		byte[] _key = RandomKeyGenerator(keySize);
-		fileHandler.writeByteFile(key, _key);
+		byte[] key = randomKeyGenerator(keySize);
+		fileHandler.writeByteFile(keyFile, key);
 	}
 
 
 	private int randomKeySize() {
 		int keyMaxSize = 100;
-		if (message != null) {
-			keyMaxSize = fileHandler.readFile(message).length();
+		if (messageFile != null) {
+			String message = fileHandler.readFile(messageFile);
+			keyMaxSize = message.length();
 		}
 		Random random = new Random();
 		int min = 1;
@@ -49,18 +50,18 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private byte[] RandomKeyGenerator(int keySize) {
+	private byte[] randomKeyGenerator(int keySize) {
 		byte[] array = new byte[keySize];
 		
 		for (int i = 0; i < array.length; i++) {
 			array[i] = new Byte((byte) i);
 		}
 		
-		RandomizeArray(array);
+		randomizeArray(array);
 		return array;
 	}
 	
-	public byte[] RandomizeArray(byte[] array){
+	private byte[] randomizeArray(byte[] array){
 		Random rgen = new Random();	
  
 		for (int i=0; i<array.length; i++) {
@@ -74,65 +75,66 @@ public class TranspositionCipher implements ICipher{
 	}
 
 	@Override
-	public void encode(File message, File key, File encoded) {
-		String mess = fileHandler.readFile(message);
-		byte[] _key = fileHandler.readByteFile(key.getPath());
-		mess = rectifyCodedMessage(mess, _key);
+	public void encode(File messageFile, File keyFile, File encodedFile) {
+		String message = fileHandler.readFile(messageFile);
+		byte[] key = fileHandler.readByteFile(keyFile.getPath());
 		
-		ArrayList<String> blocList = new ArrayList<String>();
-		blocList = messageToBlocks(mess, _key);
+		message = addFillingSpace(message, key);
+		
+        ArrayList<String> blockList = messageToBlocks(message, key);
+		
+		System.out.println("KEY");
+		for (int i = 0; i < key.length; i++) {
+			System.out.print(key[i] + " ");
+        }
 
-		
 		String codedMessage = "";
-		for (String b : blocList) {
-			codedMessage += encodeShuffle(b, _key);
+		for (String blockText : blockList) {
+			codedMessage += encodeShuffle(blockText, key);
 		}
 		
 //		System.out.println("/ : " + codedMessage);
-		fileHandler.writeFile(encoded, codedMessage);
+		fileHandler.writeFile(encodedFile, codedMessage);
 	}
 
 	@Override
-	public void decode(File encoded, File key, File message) {
-		String coded = fileHandler.readFile(encoded);
-		byte[] _key = fileHandler.readByteFile(key.getPath());
+	public void decode(File encodedFile, File keyFile, File messageFile) {
+		String coded = fileHandler.readFile(encodedFile);
+		byte[] key = fileHandler.readByteFile(keyFile.getPath());
 
-		ArrayList<String> blocList = new ArrayList<String>();
-		blocList = messageToBlocks(coded, _key);
-		decodeShuffle(coded, _key);
+		ArrayList<String> blockList = messageToBlocks(coded, key);
+		decodeShuffle(coded, key);
 		
 		String decodedMessage = "";
-		for (String b : blocList) {
-			decodedMessage += decodeShuffle(b, _key);
+		for (String blockText : blockList) {
+			decodedMessage += decodeShuffle(blockText, key);
 		}
 		
-		fileHandler.writeFile(message, decodedMessage);
-		
+		fileHandler.writeFile(messageFile, decodedMessage);
 	}
 
-
-	private String decodeShuffle(String bloc, byte[] _key) {
-		char[] tmp = bloc.toCharArray();
-		String[] res = new String[bloc.length()];
-		for (int i = 0; i < _key.length; i++) {
-			res[_key[i]] = "";
-			res[_key[i]] += tmp[i];
+	private String decodeShuffle(String blockText, byte[] key) {
+		char[] tmp = blockText.toCharArray();
+		String[] res = new String[blockText.length()];
+		for (int i = 0; i < key.length; i++) {
+			res[key[i]] = "";
+			res[key[i]] += tmp[i];
 		}
 		String result = "";
 		for (int i = 0; i < res.length; i++) {
 			result += res[i];
 		}
 //		System.out.println(result.substring(0, _key.length));
-		return result.substring(0, _key.length);
+		return result.substring(0, key.length);
 	}
 
 
-	private String encodeShuffle(String bloc, byte[] _key) {
-		char[] tmp = bloc.toCharArray();
-		String[] res = new String[bloc.length()];
-		for (int i = 0; i < _key.length; i++) {
+	private String encodeShuffle(String blockText, byte[] key) {
+		char[] tmp = blockText.toCharArray();
+		String[] res = new String[blockText.length()];
+		for (int i = 0; i < key.length; i++) {
 			res[i] = "";
-			res[i] += tmp[_key[i]];
+			res[i] += tmp[key[i]];
 		}
 		String result = "";
 		for (int i = 0; i < res.length; i++) {
@@ -142,9 +144,9 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private String rectifyCodedMessage(String coded, byte[] _key) {
-		if (coded.length()%_key.length != 0) {
-			int spacesToAdd = _key.length - coded.length()%_key.length;
+	private String addFillingSpace(String coded, byte[] key) {
+		if (coded.length() % key.length != 0) {
+			int spacesToAdd = key.length - coded.length() % key.length;
 			for (int i = 0; i < spacesToAdd; i++) {
 				coded += " ";
 			}
@@ -153,16 +155,16 @@ public class TranspositionCipher implements ICipher{
 	}
 
 
-	private ArrayList<String> messageToBlocks(String coded, byte[] _key) {
+	private ArrayList<String> messageToBlocks(String message, byte[] key) {
 		String tmpString = "";
-		ArrayList<String> blocList = new ArrayList<String>();
-		for (int i = 0; i < coded.length(); i++) {
-			tmpString += coded.charAt(i);
-			if (i>0 && (i+1)%_key.length == 0) {
-				blocList.add(tmpString);
+		ArrayList<String> blockList = new ArrayList<String>();
+		for (int i = 0; i < message.length(); i++) {
+			tmpString += message.charAt(i);
+			if (i > 0 && (i + 1) % key.length == 0) {
+				blockList.add(tmpString);
 				tmpString = "";
 			}
 		}
-		return blocList;
+		return blockList;
 	}
 }
