@@ -1,15 +1,12 @@
 package com.esgi.crypto.homophonique;
 
 import java.io.File;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.xml.stream.events.Characters;
 
 import com.esgi.crypto.FileHandler;
 import com.esgi.crypto.ICipher;
