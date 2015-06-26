@@ -87,7 +87,6 @@ public class TranspositionCipher implements ICipher{
 		for (int i = 0; i < key.length; i++) {
 			System.out.print(key[i] + " ");
         }
-		blockList = messageToBlocks(message, key);
 
 		String codedMessage = "";
 		for (String blockText : blockList) {
