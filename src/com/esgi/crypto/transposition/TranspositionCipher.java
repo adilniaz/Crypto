@@ -10,37 +10,38 @@ import com.esgi.crypto.ICipher;
 public class TranspositionCipher implements ICipher{
 	
 	FileHandler fileHandler;
-	File message;
+	File messageFile;
 	
 	public TranspositionCipher() {
 		this.fileHandler = new FileHandler();
-		this.message = null;
+		this.messageFile = null;
 	}
 	
 	
 	public TranspositionCipher(FileHandler fileHandler) {
 		this.fileHandler = fileHandler;
-		this.message = null;
+		this.messageFile = null;
 	}
 	
-	public TranspositionCipher(FileHandler fileHandler, File message) {
+	public TranspositionCipher(FileHandler fileHandler, File messageFile) {
 		this.fileHandler = fileHandler;
-		this.message = message;
+		this.messageFile = messageFile;
 	}
 
 	@Override
 	public void generateKey(File keyFile) {
 		int keySize = randomKeySize();
 		System.out.println("keySize : " + keySize + "\n");
-		byte[] key = RandomKeyGenerator(keySize);
+		byte[] key = randomKeyGenerator(keySize);
 		fileHandler.writeByteFile(keyFile, key);
 	}
 
 
 	private int randomKeySize() {
 		int keyMaxSize = 100;
-		if (message != null) {
-			keyMaxSize = fileHandler.readFile(message).length();
+		if (messageFile != null) {
+			String message = fileHandler.readFile(messageFile);
+			keyMaxSize = message.length();
 		}
 		Random random = new Random();
 		int min = 1;
@@ -56,7 +57,7 @@ public class TranspositionCipher implements ICipher{
 			array[i] = new Byte((byte) i);
 		}
 		
-		RandomizeArray(array);
+		randomizeArray(array);
 		return array;
 	}
 	
@@ -80,58 +81,57 @@ public class TranspositionCipher implements ICipher{
 		
 		message = addFillingSpace(message, key);
 		
-        blockList = messageToBlocks(message, key);
+        ArrayList<String> blockList = messageToBlocks(message, key);
 		
 		System.out.println("KEY");
 		for (int i = 0; i < key.length; i++) {
 			System.out.print(key[i] + " ");
         }
-		blockList = messageToBlocks(mess, _key);
+		blockList = messageToBlocks(message, key);
 
-		
 		String codedMessage = "";
-		for (String b : blocList) {
-			codedMessage += encodeShuffle(b, _key);
+		for (String blockText : blockList) {
+			codedMessage += encodeShuffle(blockText, key);
 		}
 		
 //		System.out.println("/ : " + codedMessage);
-		fileHandler.writeFile(encoded, codedMessage);
+		fileHandler.writeFile(encodedFile, codedMessage);
 	}
 
 	@Override
 	public void decode(File encodedFile, File keyFile, File messageFile) {
-		String coded = fileHandler.readFile(encoded);
-		byte[] key = fileHandler.readByteFile(key.getPath());
+		String coded = fileHandler.readFile(encodedFile);
+		byte[] key = fileHandler.readByteFile(keyFile.getPath());
 
-		blockList = messageToBlocks(coded, key);
+		ArrayList<String> blockList = messageToBlocks(coded, key);
 		decodeShuffle(coded, key);
 		
 		String decodedMessage = "";
 		for (String blockText : blockList) {
-			codedMessage += shuffleByKey(blockText, key);
+			decodedMessage += decodeShuffle(blockText, key);
 		}
 		
-		fileHandler.writeFile(encodedFile, codedMessage);
+		fileHandler.writeFile(messageFile, decodedMessage);
 	}
 
-	private String decodeShuffle(String bloc, byte[] _key) {
-		char[] tmp = bloc.toCharArray();
-		String[] res = new String[bloc.length()];
-		for (int i = 0; i < _key.length; i++) {
-			res[_key[i]] = "";
-			res[_key[i]] += tmp[i];
+	private String decodeShuffle(String blockText, byte[] key) {
+		char[] tmp = blockText.toCharArray();
+		String[] res = new String[blockText.length()];
+		for (int i = 0; i < key.length; i++) {
+			res[key[i]] = "";
+			res[key[i]] += tmp[i];
 		}
 		String result = "";
 		for (int i = 0; i < res.length; i++) {
 			result += res[i];
 		}
 //		System.out.println(result.substring(0, _key.length));
-		return result.substring(0, _key.length);
+		return result.substring(0, key.length);
 	}
 
 
 	private String encodeShuffle(String blockText, byte[] key) {
-		char[] tmp = bloc.toCharArray();
+		char[] tmp = blockText.toCharArray();
 		String[] res = new String[blockText.length()];
 		for (int i = 0; i < key.length; i++) {
 			res[i] = "";
@@ -167,12 +167,5 @@ public class TranspositionCipher implements ICipher{
 			}
 		}
 		return blockList;
-	}
-
-	@Override
-	public void decode(File encodedFile, File keyFile, File messageFile) {
-		String code = fileHandler.readFile(encodedFile);
-		String key = fileHandler.readFile(keyFile);
-		
 	}
 }

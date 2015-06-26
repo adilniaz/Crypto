@@ -110,10 +110,10 @@ public class Application {
 //		VigenereAttack vA = new VigenereAttack(fileHandler);
 //		vA.attack(encoded, message);
 		
-		
 		TranspositionCipher tC = new TranspositionCipher(fileHandler, messageFile);
-//		tC.generateKey(key);
+		tC.generateKey(keyFile);
 		tC.encode(messageFile, keyFile, encodedFile);
+		//tC.decode(encodedFile, keyFile, messageFile);
 	}
 	
 	public static void main(String[] args) {
