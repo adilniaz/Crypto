@@ -81,26 +81,53 @@ public class TranspositionCipher implements ICipher{
 		
 		ArrayList<String> blocList = new ArrayList<String>();
 		blocList = messageToBlocks(mess, _key);
-		
-		System.out.println("KEY");
-		for (int i = 0; i < _key.length; i++) {
-			System.out.print(_key[i] + " ");
-		}
-		System.out.println("\nKEY");
-		
-		
-		System.out.println(blocList);
 
+		
 		String codedMessage = "";
 		for (String b : blocList) {
-			codedMessage += shuffleByKey(b, _key);
+			codedMessage += encodeShuffle(b, _key);
 		}
 		
+//		System.out.println("/ : " + codedMessage);
 		fileHandler.writeFile(encoded, codedMessage);
 	}
 
+	@Override
+	public void decode(File encoded, File key, File message) {
+		String coded = fileHandler.readFile(encoded);
+		byte[] _key = fileHandler.readByteFile(key.getPath());
 
-	private String shuffleByKey(String bloc, byte[] _key) {
+		ArrayList<String> blocList = new ArrayList<String>();
+		blocList = messageToBlocks(coded, _key);
+		decodeShuffle(coded, _key);
+		
+		String decodedMessage = "";
+		for (String b : blocList) {
+			decodedMessage += decodeShuffle(b, _key);
+		}
+		
+		fileHandler.writeFile(message, decodedMessage);
+		
+	}
+
+
+	private String decodeShuffle(String bloc, byte[] _key) {
+		char[] tmp = bloc.toCharArray();
+		String[] res = new String[bloc.length()];
+		for (int i = 0; i < _key.length; i++) {
+			res[_key[i]] = "";
+			res[_key[i]] += tmp[i];
+		}
+		String result = "";
+		for (int i = 0; i < res.length; i++) {
+			result += res[i];
+		}
+//		System.out.println(result.substring(0, _key.length));
+		return result.substring(0, _key.length);
+	}
+
+
+	private String encodeShuffle(String bloc, byte[] _key) {
 		char[] tmp = bloc.toCharArray();
 		String[] res = new String[bloc.length()];
 		for (int i = 0; i < _key.length; i++) {
@@ -138,12 +165,4 @@ public class TranspositionCipher implements ICipher{
 		}
 		return blocList;
 	}
-
-	@Override
-	public void decode(File encoded, File key, File message) {
-		String code = fileHandler.readFile(encoded);
-		String _key = fileHandler.readFile(key);
-		
-	}
-
 }
