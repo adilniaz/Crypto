@@ -70,7 +70,7 @@ public class AttackTransposition implements IExecute {
 		ArrayList<String> wordFound;
 		System.out.println(character + " : " + coded.indexOf(character));
 		
-		String string = coded.substring(index-5, index+6);
+		String string = coded.substring(index-10, index+11);
 		wordFound = comparison(character);
 		System.out.println(wordFound.size());
 		
