@@ -77,7 +77,7 @@ public class TranspositionCipherAttack {
 		ArrayList<String> wordFound;
 		System.out.println(character + " : " + coded.indexOf(character));
 		
-		String string = coded.substring(index-20, index+21);
+		String string = coded.substring(index-5, index+6);
 		wordFound = comparison(character);
 		System.out.println(wordFound.size());
 		
@@ -126,7 +126,9 @@ public class TranspositionCipherAttack {
 				int foundIndex = word.indexOf(c, index);
 				if (foundIndex != -1) {
 					nbFound++;
-					index = foundIndex;
+					index = foundIndex+1;
+					indexes.put(c, index);
+					
 				}
 			}
 			if (nbFound == word.length()) {
