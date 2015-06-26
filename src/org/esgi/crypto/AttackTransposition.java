@@ -57,16 +57,21 @@ public class AttackTransposition implements IExecute {
 		System.out.println(factors + " ");
 		loadDictionnary();
 		
+		List<Integer[]> possibleKeys = new ArrayList<>();
 		for (Character character : leastUsedCharacters) {
 			for (int i = 0; i < coded.length(); i++) {
 				if (character == coded.charAt(i)) {
-					possibleWords(coded, coded.indexOf(character), character);
+					List<String> founds = possibleWords(coded, coded.indexOf(character), character);
+					for (Integer integer : factors) {
+						List<String> blocks = this.messageToBlocks(coded, integer);
+						
+					}
 				}
 			}
 		}
 	}
 
-	private void possibleWords(String coded, int index, Character character) {
+	private List<String> possibleWords(String coded, int index, Character character) {
 		ArrayList<String> wordFound;
 		System.out.println(character + " : " + coded.indexOf(character));
 		
@@ -76,6 +81,7 @@ public class AttackTransposition implements IExecute {
 		
 		List<String> founds = comparisonList(string, wordFound);
 		System.out.println(founds);
+		return founds;
 	}
 
 	private void loadDictionnary() {
@@ -112,7 +118,8 @@ public class AttackTransposition implements IExecute {
 				}
 			}
 			if (nbFound == word.length()) {
-				results.add(word);
+				if (!results.contains(word))
+					results.add(word);
 				//System.out.println("////" + word);
 			}
 		}
@@ -157,5 +164,24 @@ public class AttackTransposition implements IExecute {
 			}
 		}
 		return frequencyMap;
+	}
+
+
+	private ArrayList<String> messageToBlocks(String coded, int size) {
+		String tmpString = "";
+		ArrayList<String> blocList = new ArrayList<String>();
+		for (int i = 0; i < coded.length(); i++) {
+			tmpString += coded.charAt(i);
+			if (i>0 && (i+1)%size == 0) {
+				blocList.add(tmpString);
+				tmpString = "";
+			}
+		}
+		return blocList;
+	}
+	
+	private int[] foundedKey (List<String> blocks, String word, Character c) {
+		int[] tab = null;
+		return tab;
 	}
 }
